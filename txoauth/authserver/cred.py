@@ -17,6 +17,7 @@ class Client(object):
     def __init__(self, callbackURL):
         self._url = str(callbackURL)
 
+
     @property
     def callbackURL(self):
         return self._url
@@ -39,6 +40,9 @@ class SimpleCallbackURLFactory(object):
         """
         self._urls = callbackURLs
 
+
     def get(self, clientIdentifier):
         url = self._urls.get(clientIdentifier)
         return defer.succeed(url)
+
+
