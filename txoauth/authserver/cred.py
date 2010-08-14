@@ -3,6 +3,7 @@ Twisted Cred stuff for authorization servers.
 """
 from txoauth.authserver.interfaces import IClient, ICallbackURLFactory
 
+from twisted.cred.portal import IRealm
 from twisted.internet import defer
 
 from zope.interface import implements
@@ -15,7 +16,10 @@ class Client(object):
     implements(IClient)
 
     def __init__(self, callbackURL):
-        self._url = str(callbackURL)
+        if callbackURL is None:
+            self._url = None
+        else:
+            self._url = str(callbackURL)
 
 
     @property
@@ -46,3 +50,32 @@ class SimpleCallbackURLFactory(object):
         return defer.succeed(url)
 
 
+
+class ClientRealm(object):
+    """
+    A realm that produces clients.
+    """
+    implements(IRealm)
+    def __init__(self, callbackURLFactory):
+        """
+        Initializes a client realm.
+        
+        TODO: finish docstring
+        """
+        self._urlFactory = callbackURLFactory
+
+
+    def requestAvatar(self, clientIdentifier, mind=None, *interfaces):
+        """
+        Produces an avatar.
+
+        TODO: finish docstring
+        """
+        if IClient in interfaces:
+            d = self._urlFactory.get(clientIdentifier)
+            def makeClient(url):
+                return Client(url)
+            d.addCallback(makeClient)
+            return d
+        else:
+            raise NotImplementedError("ClientRealm only produces IClients")
