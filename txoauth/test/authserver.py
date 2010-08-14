@@ -38,7 +38,7 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
                         .implementedBy(cred.SimpleCallbackURLFactory))
 
 
-    def test_simple_missingURL(self):
+    def test_missingURL(self):
         d = self.empty.get("blah")
         def cb(url):
             self.assertEquals(url, None)
@@ -46,12 +46,13 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
         return d
 
 
-    def test_simple_registeredURL(self):
+    def test_registeredURL(self):
         d = self.withURLs.get("spam")
         def cb(url):
             self.assertEquals(url, "eggs")
         d.addCallback(cb)
         return d
+
 
 
 class ClientRealmTestCase(TestCase):
@@ -90,6 +91,7 @@ class ClientRealmTestCase(TestCase):
             self.assertTrue(interfaces.IClient.providedBy(client))
         d.addCallback(cb)
         return d
+
 
     def test_badInterface(self):
         r = cred.ClientRealm(self.urlFactory)
