@@ -59,7 +59,7 @@ class ClientRealm(object):
     def __init__(self, callbackURLFactory):
         """
         Initializes a client realm.
-        
+
         TODO: finish docstring
         """
         self._urlFactory = callbackURLFactory
