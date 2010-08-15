@@ -5,7 +5,6 @@ from txoauth.authserver import interfaces, cred
 
 from twisted.trial.unittest import TestCase
 from twisted.cred.portal import IRealm
-from txoauth.authserver.interfaces import IClient
 
 
 class ClientTestCase(TestCase):
