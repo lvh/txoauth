@@ -54,7 +54,7 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
 
 
     def test_registeredURL(self):
-        d = self.withURLs.get("spam")
+        d = urlFactory.get("spam")
         def cb(url):
             self.assertEquals(url, "eggs")
         d.addCallback(cb)
@@ -62,7 +62,7 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
 
 
     def test_missingURL(self):
-        d = self.withURLs.get("parrot")
+        d = urlFactory.get("parrot")
         def cb(url):
             self.assertEquals(url, None)
         d.addCallback(cb)
