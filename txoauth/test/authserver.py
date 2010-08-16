@@ -40,62 +40,46 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
         return d
 
 
+IDENTIFIER, URL = "spam", "eggs"
+
 
 class ClientRealmTestCase(TestCase):
     def setUp(self):
-        self.urlFactory = cred.SimpleCallbackURLFactory(spam="eggs")
+        self.urlFactory = cred.SimpleCallbackURLFactory(**{IDENTIFIER: URL})
 
 
     def test_interface(self):
         self.assertTrue(IRealm.implementedBy(cred.ClientRealm))
 
 
-    def test_simple(self):
+    def _genericTest(self, identifier=IDENTIFIER, mind=None,
+                     requestedInterfaces=(interfaces.IClient,),
+                     expectedURL=URL):
         r = cred.ClientRealm(self.urlFactory)
 
-        d = r.requestAvatar("spam", None, interfaces.IClient)
+        d = r.requestAvatar(identifier, mind, *requestedInterfaces)
         def interfaceCheck(client):
             self.assertTrue(interfaces.IClient.providedBy(client))
             return client.getCallbackURL()
         d.addCallback(interfaceCheck)
 
         def callbackURLCheck(url):
-            self.assertEquals(url, "eggs")
+            self.assertEquals(url, expectedURL)
         d.addCallback(callbackURLCheck)
 
         return d
+
+
+    def test_simple(self):
+        self._genericTest()
 
 
     def test_missingURL(self):
-        r = cred.ClientRealm(self.urlFactory)
-
-        d = r.requestAvatar("parrot", None, interfaces.IClient)
-        def interfaceCheck(client):
-            self.assertTrue(interfaces.IClient.providedBy(client))
-            return client.getCallbackURL()
-        d.addCallback(interfaceCheck)
-
-        def callbackURLCheck(url):
-            self.assertEquals(url, None)
-        d.addCallback(callbackURLCheck)
-
-        return d
+        self._genericTest(identifier="parrot", expectedURL=None)
 
 
     def test_multipleInterfaces(self):
-        r = cred.ClientRealm(self.urlFactory)
-
-        d = r.requestAvatar("spam", None, interfaces.IClient, object())
-        def interfaceCheck(client):
-            self.assertTrue(interfaces.IClient.providedBy(client))
-            return client.getCallbackURL()
-        d.addCallback(interfaceCheck)
-
-        def callbackURLCheck(url):
-            self.assertEquals(url, "eggs")
-        d.addCallback(callbackURLCheck)
-
-        return d
+        self._genericTest(requestedInterfaces=(interfaces.IClient, object()))
 
 
     def test_badInterface(self):
