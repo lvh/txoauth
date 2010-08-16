@@ -65,30 +65,49 @@ class ClientRealmTestCase(TestCase):
 
     def test_simple(self):
         r = cred.ClientRealm(self.urlFactory)
+
         d = r.requestAvatar("spam", None, interfaces.IClient)
-        def cb(client):
+        def interfaceCheck(client):
             self.assertTrue(interfaces.IClient.providedBy(client))
-            self.assertEquals(client.callbackURL, "eggs")
-        d.addCallback(cb)
+            return client.getCallbackURL()
+        d.addCallback(interfaceCheck)
+
+        def callbackURLCheck(url):
+            self.assertEquals(url, "eggs")
+        d.addCallback(callbackURLCheck)
+
         return d
 
 
     def test_missingURL(self):
         r = cred.ClientRealm(self.urlFactory)
+
         d = r.requestAvatar("parrot", None, interfaces.IClient)
-        def cb(client):
+        def interfaceCheck(client):
             self.assertTrue(interfaces.IClient.providedBy(client))
-            self.assertEquals(client.callbackURL, None)
-        d.addCallback(cb)
+            return client.getCallbackURL()
+        d.addCallback(interfaceCheck)
+
+        def callbackURLCheck(url):
+            self.assertEquals(url, None)
+        d.addCallback(callbackURLCheck)
+
         return d
 
 
     def test_multipleInterfaces(self):
         r = cred.ClientRealm(self.urlFactory)
+
         d = r.requestAvatar("spam", None, interfaces.IClient, object())
-        def cb(client):
+        def interfaceCheck(client):
             self.assertTrue(interfaces.IClient.providedBy(client))
-        d.addCallback(cb)
+            return client.getCallbackURL()
+        d.addCallback(interfaceCheck)
+
+        def callbackURLCheck(url):
+            self.assertEquals(url, None)
+        d.addCallback(callbackURLCheck)
+
         return d
 
 
