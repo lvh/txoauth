@@ -58,14 +58,15 @@ class ClientRealmTestCase(TestCase):
         r = cred.ClientRealm(self.urlFactory)
 
         d = r.requestAvatar(identifier, mind, *requestedInterfaces)
+
+        @d.addCallback
         def interfaceCheck(client):
             self.assertTrue(interfaces.IClient.providedBy(client))
             return client.getCallbackURL()
-        d.addCallback(interfaceCheck)
 
+        @d.addCallback
         def callbackURLCheck(url):
             self.assertEquals(url, expectedURL)
-        d.addCallback(callbackURLCheck)
 
         return d
 
