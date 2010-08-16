@@ -1,17 +1,22 @@
 """
 Interfaces for authorization servers.
 """
-from zope.interface import Attribute, Interface
+from zope.interface import Interface
 
 
 class IClient(Interface):
     """
     A representation of an OAuth client.
     """
-    callbackURL = Attribute(
+
+    def getCallbackURL():
         """
-        The registered callback URL for this client.
-        """)
+        Gets the registered callback URL for this client.
+
+        @rtype: C{Deferred}
+        @return: A C{Deferred} which will fire with the URL, or C{None} if no
+        URL has been registered.
+        """
 
 
 

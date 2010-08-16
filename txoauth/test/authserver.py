@@ -7,22 +7,30 @@ from twisted.trial.unittest import TestCase
 from twisted.cred.portal import IRealm
 
 
+IDENTIFIER, BOGUS_IDENTIFIER, URL = "spam", "parrot", "eggs"
+urlFactory = cred.SimpleCallbackURLFactory(**{IDENTIFIER: URL})
+
+
 class ClientTestCase(TestCase):
     def test_interface(self):
         self.assertTrue(interfaces.IClient.implementedBy(cred.Client))
 
 
-    def test_simple(self):
-        url = "http://hellowor.ld/cb"
-        c = cred.Client(url)
-        self.assertEquals(c.callbackURL, url)
+    def _genericMemoizationTest(self, identifier):
+        c = cred.Client(identifier, urlFactory)
+        old = c._url
+        d = c.getCallbackURL()
+        @d.addCallback
+        def testMemoization(url):
+            self.assertNotEqual(old, url)
 
 
-    def test_immutability(self):
-        c = cred.Client("")
-        def mutate():
-            c.callbackURL = "hi"
-        self.assertRaises(AttributeError, mutate)
+    def test_memoization_simple(self):
+        self._genericMemoizationTest(IDENTIFIER)
+
+
+    def test_memoization_missingURL(self):
+        self._genericMemoizationTest(BOGUS_IDENTIFIER)
 
 
 
@@ -37,62 +45,64 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
                         .implementedBy(cred.SimpleCallbackURLFactory))
 
 
-    def test_missingURL(self):
-        d = self.empty.get("blah")
+    def _genericFactoryTest(self, factory, identifier, expectedURL):
+        d = factory.get(identifier)
+        @d.addCallback
         def cb(url):
-            self.assertEquals(url, None)
-        d.addCallback(cb)
+            self.assertEquals(url, expectedURL)
         return d
+
+
+    def test_empty(self):
+        self._genericFactoryTest(self.empty, IDENTIFIER, None)
 
 
     def test_registeredURL(self):
-        d = self.withURLs.get("spam")
-        def cb(url):
-            self.assertEquals(url, "eggs")
-        d.addCallback(cb)
-        return d
+        self._genericFactoryTest(urlFactory, IDENTIFIER, URL)
+
+
+    def test_missingURL(self):
+        self._genericFactoryTest(urlFactory, BOGUS_IDENTIFIER, None)
 
 
 
 class ClientRealmTestCase(TestCase):
-    def setUp(self):
-        self.urlFactory = cred.SimpleCallbackURLFactory(spam="eggs")
-
-
     def test_interface(self):
         self.assertTrue(IRealm.implementedBy(cred.ClientRealm))
 
 
-    def test_simple(self):
-        r = cred.ClientRealm(self.urlFactory)
-        d = r.requestAvatar("spam", None, interfaces.IClient)
-        def cb(client):
+    def _genericTest(self, identifier=IDENTIFIER, mind=None,
+                     requestedInterfaces=(interfaces.IClient,),
+                     expectedURL=URL):
+        r = cred.ClientRealm(urlFactory)
+
+        d = r.requestAvatar(identifier, mind, *requestedInterfaces)
+
+        @d.addCallback
+        def interfaceCheck(client):
             self.assertTrue(interfaces.IClient.providedBy(client))
-            self.assertEquals(client.callbackURL, "eggs")
-        d.addCallback(cb)
+            return client.getCallbackURL()
+
+        @d.addCallback
+        def callbackURLCheck(url):
+            self.assertEquals(url, expectedURL)
+
         return d
+
+
+    def test_simple(self):
+        self._genericTest()
 
 
     def test_missingURL(self):
-        r = cred.ClientRealm(self.urlFactory)
-        d = r.requestAvatar("parrot", None, interfaces.IClient)
-        def cb(client):
-            self.assertTrue(interfaces.IClient.providedBy(client))
-            self.assertEquals(client.callbackURL, None)
-        d.addCallback(cb)
-        return d
+        self._genericTest(identifier="parrot", expectedURL=None)
 
 
     def test_multipleInterfaces(self):
-        r = cred.ClientRealm(self.urlFactory)
-        d = r.requestAvatar("spam", None, interfaces.IClient, object())
-        def cb(client):
-            self.assertTrue(interfaces.IClient.providedBy(client))
-        d.addCallback(cb)
-        return d
+        self._genericTest(requestedInterfaces=(interfaces.IClient, object()))
 
 
     def test_badInterface(self):
-        r = cred.ClientRealm(self.urlFactory)
+        r = cred.ClientRealm(urlFactory)
         self.assertRaises(NotImplementedError,
                           r.requestAvatar, "spam", None, object())
