@@ -9,22 +9,33 @@ from twisted.internet import defer
 from zope.interface import implements
 
 
+_UNSET = object()
+
+
 class Client(object):
     """
     An OAuth client.
     """
     implements(IClient)
 
-    def __init__(self, callbackURL):
-        if callbackURL is None:
-            self._url = None
+    def __init__(self, identifier, callbackURLFactory):
+        self._identifier = identifier
+        self._urlFactory = callbackURLFactory
+        self._url = _UNSET
+
+
+    def getCallbackURL(self):
+        if self._url is _UNSET:
+            d = self._urlFactory.get(self._identifier)
+
+            @d.addCallback
+            def memoize(url):
+                self._url = url
+                return url # Caller expects deferred to fire with URL
+
+            return d
         else:
-            self._url = str(callbackURL)
-
-
-    @property
-    def callbackURL(self):
-        return self._url
+            return defer.succeed(self._url)
 
 
 
@@ -72,10 +83,7 @@ class ClientRealm(object):
         TODO: finish docstring
         """
         if IClient in interfaces:
-            d = self._urlFactory.get(clientIdentifier)
-            def makeClient(url):
-                return Client(url)
-            d.addCallback(makeClient)
-            return d
+            c = Client(clientIdentifier, self._urlFactory)
+            return defer.succeed(c)
         else:
             raise NotImplementedError("ClientRealm only produces IClients")
