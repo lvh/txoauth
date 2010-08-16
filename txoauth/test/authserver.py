@@ -7,13 +7,31 @@ from twisted.trial.unittest import TestCase
 from twisted.cred.portal import IRealm
 
 
-IDENTIFIER, URL = "spam", "eggs"
+IDENTIFIER, BOGUS_IDENTIFIER, URL = "spam", "parrot", "eggs"
 urlFactory = cred.SimpleCallbackURLFactory(**{IDENTIFIER: URL})
 
 
 class ClientTestCase(TestCase):
     def test_interface(self):
         self.assertTrue(interfaces.IClient.implementedBy(cred.Client))
+
+
+    def test_memoization_simple(self):
+        c = cred.Client(IDENTIFIER, urlFactory)
+        old = c._url
+        d = c.getCallbackURL()
+        @d.addCallback
+        def testMemoization(url):
+            self.assertNotEqual(old, url)
+
+
+    def test_memoization_missingURL(self):
+        c = cred.Client(BOGUS_IDENTIFIER, urlFactory)
+        old = c._url
+        d = c.getCallbackURL()
+        @d.addCallback
+        def testMemoization(url):
+            self.assertNotEqual(old, url)
 
 
 
