@@ -11,6 +11,9 @@ class IClient(Interface):
     callbackURL = Attribute(
         """
         The registered callback URL for this client.
+
+        @type callbackURL: A C{Deferred} which will fire with the appropriate
+        URL, or C{None} if no URL is registered.
         """)
 
 
