@@ -45,28 +45,24 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
                         .implementedBy(cred.SimpleCallbackURLFactory))
 
 
-    def test_empty(self):
-        d = self.empty.get("blah")
+    def _genericFactoryTest(self, factory, identifier, expectedURL):
+        d = factory.get(identifier)
+        @d.addCallback
         def cb(url):
-            self.assertEquals(url, None)
-        d.addCallback(cb)
+            self.assertEquals(url, expectedURL)
         return d
+
+
+    def test_empty(self):
+        self._genericFactoryTest(self.empty, IDENTIFIER, None)
 
 
     def test_registeredURL(self):
-        d = urlFactory.get("spam")
-        def cb(url):
-            self.assertEquals(url, "eggs")
-        d.addCallback(cb)
-        return d
+        self._genericFactoryTest(urlFactory, IDENTIFIER, URL)
 
 
     def test_missingURL(self):
-        d = urlFactory.get("parrot")
-        def cb(url):
-            self.assertEquals(url, None)
-        d.addCallback(cb)
-        return d
+        self._genericFactoryTest(urlFactory, BOGUS_IDENTIFIER, None)
 
 
 
