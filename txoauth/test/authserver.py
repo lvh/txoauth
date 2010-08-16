@@ -12,19 +12,6 @@ class ClientTestCase(TestCase):
         self.assertTrue(interfaces.IClient.implementedBy(cred.Client))
 
 
-    def test_simple(self):
-        url = "http://hellowor.ld/cb"
-        c = cred.Client(url)
-        self.assertEquals(c.callbackURL, url)
-
-
-    def test_immutability(self):
-        c = cred.Client("")
-        def mutate():
-            c.callbackURL = "hi"
-        self.assertRaises(AttributeError, mutate)
-
-
 
 class SimpleCallbackURLFactoryTestCase(TestCase):
     def setUp(self):
