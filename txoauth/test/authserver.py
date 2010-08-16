@@ -16,22 +16,21 @@ class ClientTestCase(TestCase):
         self.assertTrue(interfaces.IClient.implementedBy(cred.Client))
 
 
-    def test_memoization_simple(self):
-        c = cred.Client(IDENTIFIER, urlFactory)
+    def _genericMemoizationTest(self, identifier):
+        c = cred.Client(identifier, urlFactory)
         old = c._url
         d = c.getCallbackURL()
         @d.addCallback
         def testMemoization(url):
             self.assertNotEqual(old, url)
+
+
+    def test_memoization_simple(self):
+        self._genericMemoizationTest(IDENTIFIER)
 
 
     def test_memoization_missingURL(self):
-        c = cred.Client(BOGUS_IDENTIFIER, urlFactory)
-        old = c._url
-        d = c.getCallbackURL()
-        @d.addCallback
-        def testMemoization(url):
-            self.assertNotEqual(old, url)
+        self._genericMemoizationTest(BOGUS_IDENTIFIER)
 
 
 
