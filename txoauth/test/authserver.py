@@ -7,6 +7,10 @@ from twisted.trial.unittest import TestCase
 from twisted.cred.portal import IRealm
 
 
+IDENTIFIER, URL = "spam", "eggs"
+urlFactory = cred.SimpleCallbackURLFactory(**{IDENTIFIER: URL})
+
+
 class ClientTestCase(TestCase):
     def test_interface(self):
         self.assertTrue(interfaces.IClient.implementedBy(cred.Client))
@@ -40,14 +44,8 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
         return d
 
 
-IDENTIFIER, URL = "spam", "eggs"
-
 
 class ClientRealmTestCase(TestCase):
-    def setUp(self):
-        self.urlFactory = cred.SimpleCallbackURLFactory(**{IDENTIFIER: URL})
-
-
     def test_interface(self):
         self.assertTrue(IRealm.implementedBy(cred.ClientRealm))
 
@@ -55,7 +53,7 @@ class ClientRealmTestCase(TestCase):
     def _genericTest(self, identifier=IDENTIFIER, mind=None,
                      requestedInterfaces=(interfaces.IClient,),
                      expectedURL=URL):
-        r = cred.ClientRealm(self.urlFactory)
+        r = cred.ClientRealm(urlFactory)
 
         d = r.requestAvatar(identifier, mind, *requestedInterfaces)
 
@@ -84,6 +82,6 @@ class ClientRealmTestCase(TestCase):
 
 
     def test_badInterface(self):
-        r = cred.ClientRealm(self.urlFactory)
+        r = cred.ClientRealm(urlFactory)
         self.assertRaises(NotImplementedError,
                           r.requestAvatar, "spam", None, object())
