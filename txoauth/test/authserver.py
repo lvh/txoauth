@@ -92,7 +92,7 @@ class ClientRealmTestCase(TestCase):
         d.addCallback(interfaceCheck)
 
         def callbackURLCheck(url):
-            self.assertEquals(url, None)
+            self.assertEquals(url, "eggs")
         d.addCallback(callbackURLCheck)
 
         return d
