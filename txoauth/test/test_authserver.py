@@ -7,7 +7,11 @@ from twisted.trial.unittest import TestCase
 from twisted.cred.portal import IRealm
 
 
-IDENTIFIER, BOGUS_IDENTIFIER, URL, SECRET = "spam", "parrot", "eggs", "psu"
+IDENTIFIER, SECRET = "spam", "eggs"
+BOGUS_IDENTIFIER, BOGUS_SECRET = "parrot", "dead"
+URL = "eggs"
+
+
 urlFactory = cred.SimpleCallbackURLFactory(**{IDENTIFIER: URL})
 
 
@@ -158,3 +162,8 @@ class ClientIdentifierSecretTestCase(ClientIdentifierTestCase):
     def test_interface_withSecret(self):
         self.assertTrue(interfaces.IClientIdentifierSecret
                         .implementedBy(cred.ClientIdentifierSecret))
+
+
+    def test_simple(self):
+        self.assertEqual(self.identifier.secret, SECRET)
+
