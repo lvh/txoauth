@@ -124,7 +124,7 @@ class ClientRealmTestCase(TestCase):
 
 class ClientIdentifierTestCase(TestCase):
     def setUp(self):
-        self.identifier = cred.ClientIdentifier(IDENTIFIER)
+        self.credentials = cred.ClientIdentifier(IDENTIFIER)
 
 
     def test_interface(self):
@@ -133,12 +133,12 @@ class ClientIdentifierTestCase(TestCase):
 
 
     def test_simple(self):
-        self.assertEqual(self.identifier.identifier, IDENTIFIER)
+        self.assertEqual(self.credentials.identifier, IDENTIFIER)
 
 
     def test_credentialImmutability(self):
         def mutate():
-            self.identifier.identifier = BOGUS_IDENTIFIER
+            self.credentials.identifier = BOGUS_IDENTIFIER
         self.assertRaises(AttributeError, mutate)
 
 
@@ -148,15 +148,15 @@ class ClientIdentifierTestCase(TestCase):
         change anything.
         """
         def mutate():
-            oldIdentifier = self.identifier.identifier
-            self.identifier.identifier = oldIdentifier
+            oldIdentifier = self.credentials.identifier
+            self.credentials.identifier = oldIdentifier
         self.assertRaises(AttributeError, mutate)
 
 
 
 class ClientIdentifierSecretTestCase(ClientIdentifierTestCase):
     def setUp(self):
-        self.identifier = cred.ClientIdentifierSecret(IDENTIFIER, SECRET)
+        self.credentials = cred.ClientIdentifierSecret(IDENTIFIER, SECRET)
 
 
     def test_interface_withSecret(self):
@@ -165,5 +165,20 @@ class ClientIdentifierSecretTestCase(ClientIdentifierTestCase):
 
 
     def test_simple(self):
-        self.assertEqual(self.identifier.secret, SECRET)
+        self.assertEqual(self.credentials.secret, SECRET)
 
+
+    def test_secretImmutability(self):
+        def mutate():
+            self.credentials.secret = self.credentials.secret
+        self.assertRaises(AttributeError, mutate)
+
+
+    def test_secretImmutability_sameSecret(self):
+        """
+        Tests that you are not allowed to mutate, even if it wouldn't actually
+        change anything.
+        """
+        def mutate():
+            self.credentials.secret = self.credentials.secret
+        self.assertRaises(AttributeError, mutate)
