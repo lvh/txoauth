@@ -119,6 +119,27 @@ class ClientRealmTestCase(TestCase):
 
 
 class ClientIdentifierTestCase(TestCase):
+    def setUp(self):
+        self.clientIdentifier = cred.ClientIdentifier(IDENTIFIER)
+
+
     def test_interface(self):
         self.assertTrue(interfaces.IClientIdentifier
                         .implementedBy(cred.ClientIdentifier))
+
+
+    def test_credentialImmutability(self):
+        def mutate():
+            self.clientIdentifier.identifier = BOGUS_IDENTIFIER
+        self.assertRaises(AttributeError, mutate)
+
+
+    def test_credentialImmutability_sameCredential(self):
+        """
+        Tests that you are not allowed to mutate, even if it wouldn't actually
+        change anything.
+        """
+        def mutate():
+            oldIdentifier = self.clientIdentifier.identifier
+            self.clientIdentifier.identifier = oldIdentifier
+        self.assertRaises(AttributeError, mutate)
