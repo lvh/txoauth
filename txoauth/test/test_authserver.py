@@ -7,7 +7,7 @@ from twisted.trial.unittest import TestCase
 from twisted.cred.portal import IRealm
 
 
-IDENTIFIER, BOGUS_IDENTIFIER, URL = "spam", "parrot", "eggs"
+IDENTIFIER, BOGUS_IDENTIFIER, URL, SECRET = "spam", "parrot", "eggs", "psu"
 urlFactory = cred.SimpleCallbackURLFactory(**{IDENTIFIER: URL})
 
 
@@ -120,7 +120,7 @@ class ClientRealmTestCase(TestCase):
 
 class ClientIdentifierTestCase(TestCase):
     def setUp(self):
-        self.clientIdentifier = cred.ClientIdentifier(IDENTIFIER)
+        self.identifier = cred.ClientIdentifier(IDENTIFIER)
 
 
     def test_interface(self):
@@ -129,12 +129,12 @@ class ClientIdentifierTestCase(TestCase):
 
 
     def test_simple(self):
-        self.assertEqual(self.clientIdentifier.identifier, IDENTIFIER)
+        self.assertEqual(self.identifier.identifier, IDENTIFIER)
 
 
     def test_credentialImmutability(self):
         def mutate():
-            self.clientIdentifier.identifier = BOGUS_IDENTIFIER
+            self.identifier.identifier = BOGUS_IDENTIFIER
         self.assertRaises(AttributeError, mutate)
 
 
@@ -144,6 +144,17 @@ class ClientIdentifierTestCase(TestCase):
         change anything.
         """
         def mutate():
-            oldIdentifier = self.clientIdentifier.identifier
-            self.clientIdentifier.identifier = oldIdentifier
+            oldIdentifier = self.identifier.identifier
+            self.identifier.identifier = oldIdentifier
         self.assertRaises(AttributeError, mutate)
+
+
+
+class ClientIdentifierSecretTestCase(ClientIdentifierTestCase):
+    def setUp(self):
+        self.identifier = cred.ClientIdentifierSecret(IDENTIFIER, SECRET)
+
+
+    def test_interface_withSecret(self):
+        self.assertTrue(interfaces.IClientIdentifierSecret
+                        .implementedBy(cred.ClientIdentifierSecret))
