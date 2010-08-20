@@ -136,20 +136,19 @@ class ClientIdentifierTestCase(TestCase):
         self.assertEqual(self.credentials.identifier, IDENTIFIER)
 
 
-    def test_credentialImmutability(self):
+    def test_identifierImmutability(self):
         def mutate():
             self.credentials.identifier = BOGUS_IDENTIFIER
         self.assertRaises(AttributeError, mutate)
 
 
-    def test_credentialImmutability_sameCredential(self):
+    def test_identifierImmutability_sameIdentifier(self):
         """
         Tests that you are not allowed to mutate, even if it wouldn't actually
         change anything.
         """
         def mutate():
-            oldIdentifier = self.credentials.identifier
-            self.credentials.identifier = oldIdentifier
+            self.credentials.identifier = self.credentials.identifier
         self.assertRaises(AttributeError, mutate)
 
 
