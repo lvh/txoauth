@@ -128,6 +128,10 @@ class ClientIdentifierTestCase(TestCase):
                         .implementedBy(cred.ClientIdentifier))
 
 
+    def test_simple(self):
+        self.assertEqual(self.clientIdentifier.identifier, IDENTIFIER)
+
+
     def test_credentialImmutability(self):
         def mutate():
             self.clientIdentifier.identifier = BOGUS_IDENTIFIER
