@@ -56,3 +56,16 @@ class IClientIdentifierSecret(IClientIdentifier):
         """
         The shared secret of this client.
         """)
+
+
+
+class IRequest(Interface):
+    clientIdentifier = Attribute(
+        """
+        The identifier for the client on behalf of which this request is made.
+
+        This object always provides  L{ICredentials}, so it can be used as
+        credentials for Twisted Cred.
+
+        @type clientIdentifier: L{IClientIdentifier}
+        """)
