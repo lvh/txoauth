@@ -117,4 +117,3 @@ class ClientIdentifierSecret(ClientIdentifier):
     @property
     def secret(self):
         return self._secret
-
