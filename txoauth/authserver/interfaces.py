@@ -1,7 +1,9 @@
 """
 Interfaces for authorization servers.
 """
-from zope.interface import Interface
+from twisted.cred.credentials import ICredentials
+
+from zope.interface import Interface, Attribute
 
 
 class IClient(Interface):
@@ -32,3 +34,25 @@ class ICallbackURLFactory(Interface):
 
         @return: A C{Deferred} that will fire with the callback URL (C{str}).
         """
+
+
+
+class IClientIdentifier(ICredentials):
+    """
+    A client identifier.
+    """
+    identifier = Attribute(
+        """
+        The client identifier for a particular client.
+        """)
+
+
+
+class IClientIdentifierSecret(IClientIdentifier):
+    """
+    A client identifier plus a shared secret.
+    """
+    secret = Attribute(
+        """
+        The shared secret of this client.
+        """)
