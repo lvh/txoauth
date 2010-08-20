@@ -115,3 +115,10 @@ class ClientRealmTestCase(TestCase):
         r = cred.ClientRealm(urlFactory)
         self.assertRaises(NotImplementedError,
                           r.requestAvatar, "spam", None, object())
+
+
+
+class ClientIdentifierTestCase(TestCase):
+    def test_interface(self):
+        self.assertTrue(interfaces.IClientIdentifier
+                        .implementedBy(cred.ClientIdentifier))
