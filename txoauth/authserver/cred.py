@@ -103,3 +103,18 @@ class ClientIdentifier(object):
     @property
     def identifier(self):
         return self._identifier
+
+
+
+class ClientIdentifierSecret(ClientIdentifier):
+    implements(IClientIdentifierSecret)
+
+    def __init__(self, identifier, secret):
+        super(ClientIdentifierSecret, self).__init__(identifier)
+        self._secret = secret
+
+
+    @property
+    def secret(self):
+        return self._secret
+
