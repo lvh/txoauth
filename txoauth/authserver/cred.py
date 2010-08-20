@@ -1,7 +1,9 @@
 """
 Twisted Cred stuff for authorization servers.
 """
-from txoauth.authserver.interfaces import IClient, ICallbackURLFactory
+from txoauth.authserver.interfaces import (IClient, ICallbackURLFactory,
+                                           IClientIdentifier,
+                                           IClientIdentifierSecret)
 
 from twisted.cred.portal import IRealm
 from twisted.internet import defer
@@ -67,6 +69,7 @@ class ClientRealm(object):
     A realm that produces clients.
     """
     implements(IRealm)
+
     def __init__(self, callbackURLFactory):
         """
         Initializes a client realm.
@@ -87,3 +90,16 @@ class ClientRealm(object):
             return defer.succeed(c)
         else:
             raise NotImplementedError("ClientRealm only produces IClients")
+
+
+
+class ClientIdentifier(object):
+    implements(IClientIdentifier)
+
+    def __init__(self, identifier):
+        self._identifier = identifier
+
+
+    @property
+    def identifier(self):
+        return self._identifier
