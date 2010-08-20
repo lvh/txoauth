@@ -60,6 +60,9 @@ class IClientIdentifierSecret(IClientIdentifier):
 
 
 class IRequest(Interface):
+    """
+    An OAuth request.
+    """
     clientIdentifier = Attribute(
         """
         The identifier for the client on behalf of which this request is made.
