@@ -181,3 +181,122 @@ class ClientIdentifierSecretTestCase(ClientIdentifierTestCase):
         def mutate():
             self.credentials.secret = self.credentials.secret
         self.assertRaises(AttributeError, mutate)
+
+
+
+class MockRequest(object):
+    def __init__(self, authorizationHeader=None, args=None):
+        self.args = args or {}
+        if authorizationHeader is not None:
+            self._identifier, self._secret = (authorizationHeader
+                                              .decode("base64").split(":"))
+        else:
+            self._identifier = self._secret = ""
+
+    def getUser(self):
+        return self._identifier
+
+
+    def getPassword(self):
+        return self._secret
+
+
+
+class MockRequestTestCase(TestCase):
+    def test_simple_nothing(self):
+        r = MockRequest()
+
+        self.assertEqual(r.getUser(), "")
+        self.assertEqual(r.getPassword(), "")
+
+
+    def test_simple_authorizationHeader(self):
+        r = MockRequest(("%s:%s" % (IDENTIFIER, SECRET)).encode("base64"))
+
+        self.assertEqual(r.getUser(), IDENTIFIER)
+        self.assertEqual(r.getPassword(), SECRET)
+
+
+    def test_bogusInput_missingPassword(self):
+        self.assertRaises(Exception, MockRequest, IDENTIFIER.encode("base64"))
+
+
+    def test_bogusInput_notBase64(self):
+        self.assertRaises(Exception, MockRequest, IDENTIFIER)
+
+
+
+class ClientCredentialsExtractionTestCase(TestCase):
+    def test_simple_authorizationHeader(self):
+        r = MockRequest(("%s:%s" % (IDENTIFIER, SECRET)).encode("base64"))
+        c = cred._extractClientCredentials(r)
+
+        self.assertTrue(interfaces.IClientIdentifierSecret.providedBy(c))
+        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+
+
+    def test_simple_urlEncoded_identifierOnly(self):
+        r = MockRequest(args={"client_id": IDENTIFIER})
+        c = cred._extractClientCredentials(r)
+
+        self.assertFalse(interfaces.IClientIdentifierSecret.providedBy(c))
+        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+
+
+    def test_simple_urlEncoded_identifierAndSecret(self):
+        r = MockRequest(args={"client_id": IDENTIFIER,
+                              "client_secret": SECRET})
+        c = cred._extractClientCredentials(r)
+
+        self.assertTrue(interfaces.IClientIdentifierSecret.providedBy(c))
+        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+
+
+    def test_broken_noIdentifierOrSecret(self):
+        r = MockRequest()
+        self.assertRaises(TypeError, cred._extractClientCredentials, r)
+
+
+    def test_broken_SecretNoIdentifier(self):
+        r = MockRequest(args={"client_secret": SECRET})
+        self.assertRaises(TypeError, cred._extractClientCredentials, r)
+
+
+    def test_simple_fromSpecification_first(self):
+        """
+        Tests for a mocked version of the Authorization header example from
+        the specification.
+        """
+        args = {
+            "grant_type": "authorization_code",
+            "client_id": "s6BhdRkqt3",
+            "code": "i1WsRn1uB1",
+            "redirect_uri":"https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb"
+        }
+        authHeader = "czZCaGRSa3F0MzpnWDFmQmF0M2JW"
+
+        r = MockRequest(authHeader, args)
+        c = cred._extractClientCredentials(r)
+
+        self.assertTrue(interfaces.IClientIdentifierSecret.providedBy(c))
+        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+
+
+    def test_simple_fromSpecification_second(self):
+        """
+        Tests for a mocked version of the example from the specification
+        without an authorization header.
+        """
+        args = {
+            "grant_type": "authorization_code",
+            "client_id": "s6BhdRkqt3",
+            "client_secret": "gX1fBat3bV",
+            "code": "i1WsRn1uB1",
+            "redirect_uri":"https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb"
+        }
+
+        r = MockRequest(args=args)
+        c = cred._extractClientCredentials(r)
+
+        self.assertTrue(interfaces.IClientIdentifierSecret.providedBy(c))
+        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
