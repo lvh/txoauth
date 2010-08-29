@@ -5,7 +5,7 @@ from txoauth.authserver import interfaces, cred
 
 from twisted.trial.unittest import TestCase
 from twisted.cred.portal import IRealm
-from twisted.web2.iweb import IOldRequest
+from twisted.web.iweb import IRequest
 
 from zope.interface import implements
 
@@ -190,7 +190,7 @@ class ClientIdentifierSecretTestCase(ClientIdentifierTestCase):
 
 
 class MockRequest(object):
-    implements(IOldRequest)
+    implements(IRequest)
 
     def __init__(self, authorizationHeader=None, args=None):
         self.args = args or {}
