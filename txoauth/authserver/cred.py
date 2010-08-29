@@ -89,7 +89,7 @@ class ClientRealm(object):
         """
         if IClient in interfaces:
             c = Client(clientIdentifier, self._urlFactory)
-            return defer.succeed(c)
+            return defer.succeed((IClient, c, lambda: None))
         else:
             raise NotImplementedError("ClientRealm only produces IClients")
 
