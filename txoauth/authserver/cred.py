@@ -8,7 +8,7 @@ from txoauth.authserver.interfaces import (IClient, ICallbackURLFactory,
 from twisted.cred.portal import IRealm
 from twisted.internet import defer
 from twisted.python.components import registerAdapter
-from twisted.web2.iweb import IOldRequest
+from twisted.web.iweb import IRequest
 
 from zope.interface import implements
 
@@ -140,7 +140,7 @@ def _extractClientCredentials(request):
 
 
 registerAdapter(_extractClientCredentials,
-                IOldRequest,
+                IRequest,
                 IClientIdentifier)
 
 
@@ -152,5 +152,5 @@ def _adaptToIClientIdentifierSecret(request):
 
 
 registerAdapter(_adaptToIClientIdentifierSecret,
-                IOldRequest,
+                IRequest,
                 IClientIdentifierSecret)
