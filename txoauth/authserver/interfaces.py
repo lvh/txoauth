@@ -32,7 +32,8 @@ class ICallbackURLFactory(Interface):
         """
         Gets the callback URL for a particular client.
 
-        @return: A C{Deferred} that will fire with the callback URL (C{str}).
+        @return: A C{Deferred} that will fire with the callback URL (C{str})
+        or C{None}, if no URL has been registered.
         """
 
 
