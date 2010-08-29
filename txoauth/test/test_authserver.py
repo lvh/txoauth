@@ -95,7 +95,8 @@ class ClientRealmTestCase(TestCase):
         d = r.requestAvatar(identifier, mind, *requestedInterfaces)
 
         @d.addCallback
-        def interfaceCheck(client):
+        def interfaceCheck(avatarTuple):
+            interface, client, logout = avatarTuple
             self.assertTrue(interfaces.IClient.providedBy(client))
             return client.getCallbackURL()
 
