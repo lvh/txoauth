@@ -2,6 +2,7 @@
 Tests for txOAuth authentication servers.
 """
 from txoauth.authserver import interfaces, cred
+from txoauth.contrib.simple import SimpleCallbackURLFactory
 
 from twisted.trial.unittest import TestCase
 from twisted.cred.portal import IRealm
@@ -15,7 +16,7 @@ BOGUS_IDENTIFIER, BOGUS_SECRET = "parrot", "dead"
 URL = "eggs"
 
 
-urlFactory = cred.SimpleCallbackURLFactory(**{IDENTIFIER: URL})
+urlFactory = SimpleCallbackURLFactory(**{IDENTIFIER: URL})
 
 
 class ClientTestCase(TestCase):
@@ -47,38 +48,6 @@ class ClientTestCase(TestCase):
 
     def test_memoization_missingURL(self):
         self._genericMemoizationTest(BOGUS_IDENTIFIER, None)
-
-
-
-class SimpleCallbackURLFactoryTestCase(TestCase):
-    def setUp(self):
-        self.empty = cred.SimpleCallbackURLFactory()
-        self.withURLs = cred.SimpleCallbackURLFactory(spam="eggs")
-
-
-    def test_interface(self):
-        self.assertTrue(interfaces.ICallbackURLFactory
-                        .implementedBy(cred.SimpleCallbackURLFactory))
-
-
-    def _genericFactoryTest(self, factory, identifier, expectedURL):
-        d = factory.get(identifier)
-        @d.addCallback
-        def cb(url):
-            self.assertEquals(url, expectedURL)
-        return d
-
-
-    def test_empty(self):
-        self._genericFactoryTest(self.empty, IDENTIFIER, None)
-
-
-    def test_registeredURL(self):
-        self._genericFactoryTest(urlFactory, IDENTIFIER, URL)
-
-
-    def test_missingURL(self):
-        self._genericFactoryTest(urlFactory, BOGUS_IDENTIFIER, None)
 
 
 
