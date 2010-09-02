@@ -3,8 +3,7 @@ Tests for contributed txOAuth code.
 """
 from txoauth.authserver import interfaces
 from txoauth.contrib.simple import SimpleCallbackURLFactory
-from txoauth.test.test_authserver import (IDENTIFIER, BOGUS_IDENTIFIER, URL,
-                                          urlFactory)
+from txoauth.test.test_authserver import IDENTIFIER, BOGUS_IDENTIFIER, URL
 
 from twisted.trial.unittest import TestCase
 
@@ -12,7 +11,7 @@ from twisted.trial.unittest import TestCase
 class SimpleCallbackURLFactoryTestCase(TestCase):
     def setUp(self):
         self.empty = SimpleCallbackURLFactory()
-        self.withURLs = SimpleCallbackURLFactory(spam="eggs")
+        self.withURLs = SimpleCallbackURLFactory(**{IDENTIFIER: URL})
 
 
     def test_interface(self):
@@ -33,8 +32,8 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
 
 
     def test_registeredURL(self):
-        self._genericFactoryTest(urlFactory, IDENTIFIER, URL)
+        self._genericFactoryTest(self.wtihURLs, IDENTIFIER, URL)
 
 
     def test_missingURL(self):
-        self._genericFactoryTest(urlFactory, BOGUS_IDENTIFIER, None)
+        self._genericFactoryTest(self.withURLs, BOGUS_IDENTIFIER, None)
