@@ -82,7 +82,7 @@ class ClientRealmTestCase(TestCase):
 
 
     def test_missingURL(self):
-        self._genericTest(identifier="parrot", expectedURL=None)
+        self._genericTest(identifier=BOGUS_IDENTIFIER, expectedURL=None)
 
 
     def test_multipleInterfaces(self):
@@ -92,7 +92,7 @@ class ClientRealmTestCase(TestCase):
     def test_badInterface(self):
         r = cred.ClientRealm(urlFactory)
         self.assertRaises(NotImplementedError,
-                          r.requestAvatar, "spam", None, object())
+                          r.requestAvatar, IDENTIFIER, None, object())
 
 
 
