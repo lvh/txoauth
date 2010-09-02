@@ -32,7 +32,7 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
 
 
     def test_registeredURL(self):
-        self._genericFactoryTest(self.wtihURLs, IDENTIFIER, URL)
+        self._genericFactoryTest(self.withURLs, IDENTIFIER, URL)
 
 
     def test_missingURL(self):
