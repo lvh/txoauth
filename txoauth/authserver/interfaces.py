@@ -11,13 +11,13 @@ class IClient(Interface):
     A representation of an OAuth client.
     """
 
-    def getCallbackURL():
+    def getRedirectURI():
         """
-        Gets the registered callback URL for this client.
+        Gets the registered redirection URI for this client.
 
         @rtype: C{Deferred}
-        @return: A C{Deferred} which will fire with the URL, or C{None} if no
-        URL has been registered.
+        @return: A C{Deferred} which will fire with the URI, or C{None} if no
+        URI has been registered.
         """
 
 
