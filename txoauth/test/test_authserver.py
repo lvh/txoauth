@@ -13,7 +13,7 @@ from zope.interface import implements
 
 IDENTIFIER, SECRET = "spam", "eggs"
 BOGUS_IDENTIFIER, BOGUS_SECRET = "parrot", "dead"
-URL = "eggs"
+URL, BOGUS_URL = "hungarian", "phrasebook"
 
 
 urlFactory = SimpleCallbackURLFactory(**{IDENTIFIER: URL})
@@ -126,6 +126,18 @@ class ClientIdentifierTestCase(TestCase):
         self.assertRaises(AttributeError, mutate)
 
 
+    def test_callbackURLImmutability(self):
+        def mutate():
+            self.credentials.callbackURL = BOGUS_URL
+        self.assertRaises(AttributeError, mutate)
+
+
+    def test_callbackURLImmutability_sameIdentifier(self):
+        def mutate():
+            self.credentials.callbackURL = self.credentials.callbackURL
+        self.assertRaises(AttributeError, mutate)
+
+
 
 class ClientIdentifierSecretTestCase(ClientIdentifierTestCase):
     def setUp(self):
@@ -201,6 +213,7 @@ class MockRequestTestCase(TestCase):
         self.assertRaises(Exception, MockRequest, IDENTIFIER)
 
 
+
 authHeader = ("%s:%s" % (IDENTIFIER, SECRET)).encode("base64")
 simpleAuthHeaderRequest = MockRequest(authHeader)
 
@@ -232,6 +245,8 @@ requestArgs = {
     "redirect_uri":"https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb"
 }
 secondSpecificationRequest = MockRequest(args=requestArgs)
+
+
 
 class ClientCredentialsExtractionTestCase(TestCase):
     def test_simple_authorizationHeader(self):
