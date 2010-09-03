@@ -74,8 +74,9 @@ class ClientRealm(object):
 class ClientIdentifier(object):
     implements(IClientIdentifier)
 
-    def __init__(self, identifier):
+    def __init__(self, identifier, callbackURL=None):
         self._identifier = identifier
+        self._cbURL = callbackURL
 
 
     @property
@@ -83,12 +84,17 @@ class ClientIdentifier(object):
         return self._identifier
 
 
+    @property
+    def callbackURL(self):
+        return self._cbURL
+
+
 
 class ClientIdentifierSecret(ClientIdentifier):
     implements(IClientIdentifierSecret)
 
-    def __init__(self, identifier, secret):
-        super(ClientIdentifierSecret, self).__init__(identifier)
+    def __init__(self, identifier, secret, callbackURL=None):
+        super(ClientIdentifierSecret, self).__init__(identifier, callbackURL)
         self._secret = secret
 
 
