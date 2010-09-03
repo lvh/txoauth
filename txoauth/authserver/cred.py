@@ -21,24 +21,24 @@ class Client(object):
     """
     implements(IClient)
 
-    def __init__(self, identifier, callbackURLFactory):
+    def __init__(self, identifier, redirectURIFactory):
         self._identifier = identifier
-        self._urlFactory = callbackURLFactory
-        self._url = _UNSET
+        self._redirectURIFactory = redirectURIFactory
+        self._redirectURI = _UNSET
 
 
-    def getCallbackURL(self):
-        if self._url is _UNSET:
-            d = self._urlFactory.get(self._identifier)
+    def getRedirectURI(self):
+        if self._redirectURI is _UNSET:
+            d = self._redirectURIFactory.get(self._identifier)
 
             @d.addCallback
-            def memoize(url):
-                self._url = url
-                return url # Caller expects deferred to fire with URL
+            def memoize(uri):
+                self._redirectURI = uri
+                return uri
 
             return d
         else:
-            return defer.succeed(self._url)
+            return defer.succeed(self._redirectURI)
 
 
 
