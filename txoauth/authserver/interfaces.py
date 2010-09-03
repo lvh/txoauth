@@ -45,6 +45,18 @@ class IClientIdentifier(ICredentials):
     identifier = Attribute(
         """
         The client identifier for a particular client.
+
+        @type: C{str}
+        """)
+
+
+    callbackURL = Attribute(
+        """
+        The callback URL presented in a request.
+
+        If the callback URL was not present in the request, C{None}.
+
+        @type: C{str} or C{None}
         """)
 
 
@@ -56,6 +68,8 @@ class IClientIdentifierSecret(IClientIdentifier):
     secret = Attribute(
         """
         The shared secret of this client.
+
+        @type: C{str}
         """)
 
 
