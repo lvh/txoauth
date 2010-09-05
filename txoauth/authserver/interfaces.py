@@ -24,15 +24,15 @@ class IClient(Interface):
 
 class IRedirectionURIFactory(Interface):
     """
-    A factory for client redirection URIs.
+    A factory for client redirect URIs.
 
     This typically is just a fancy storage mechanism.
     """
-    def get(clientIdentifier):
+    def getRedirectURI(clientIdentifier):
         """
-        Gets the redirection URI for a particular client.
+        Gets the redirect URI for a particular client.
 
-        @return: A C{Deferred} that will fire with the redirection URI (C{str})
+        @return: A C{Deferred} that will fire with the redirect URI (C{str})
         or C{None}, if no URI has been registered.
         """
 

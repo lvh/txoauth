@@ -20,7 +20,7 @@ class SimpleRedirectionURIFactoryTestCase(TestCase):
 
 
     def _genericFactoryTest(self, factory, identifier, expectedURL):
-        d = factory.get(identifier)
+        d = factory.getRedirectURI(identifier)
         @d.addCallback
         def cb(url):
             self.assertEquals(url, expectedURL)

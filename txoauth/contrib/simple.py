@@ -25,6 +25,6 @@ class SimpleRedirectionURIFactory(object):
         self._uris = redirectionURIs
 
 
-    def get(self, clientIdentifier):
+    def getRedirectURI(self, clientIdentifier):
         uri = self._uris.get(clientIdentifier)
         return defer.succeed(uri)
