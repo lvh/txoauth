@@ -22,18 +22,18 @@ class IClient(Interface):
 
 
 
-class ICallbackURLFactory(Interface):
+class IRedirectionURIFactory(Interface):
     """
-    A factory for client callback URLs.
+    A factory for client redirection URIs.
 
     This typically is just a fancy storage mechanism.
     """
     def get(clientIdentifier):
         """
-        Gets the callback URL for a particular client.
+        Gets the redirection URI for a particular client.
 
-        @return: A C{Deferred} that will fire with the callback URL (C{str})
-        or C{None}, if no URL has been registered.
+        @return: A C{Deferred} that will fire with the redirection URI (C{str})
+        or C{None}, if no URI has been registered.
         """
 
 

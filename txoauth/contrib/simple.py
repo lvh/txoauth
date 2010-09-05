@@ -1,7 +1,7 @@
 """
 Simple implementations of some txOAuth interfaces.
 """
-from txoauth.authserver.interfaces import ICallbackURLFactory
+from txoauth.authserver.interfaces import IRedirectionURIFactory
 
 from twisted.internet import defer
 
@@ -14,7 +14,7 @@ class SimpleCallbackURLFactory(object):
 
     This is a wrapper around a dictionary.
     """
-    implements(ICallbackURLFactory)
+    implements(IRedirectionURIFactory)
 
     def __init__(self, **callbackURLs):
         """

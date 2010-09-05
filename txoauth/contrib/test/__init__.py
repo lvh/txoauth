@@ -15,7 +15,7 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
 
 
     def test_interface(self):
-        self.assertTrue(interfaces.ICallbackURLFactory
+        self.assertTrue(interfaces.IRedirectionURIFactory
                         .implementedBy(SimpleCallbackURLFactory))
 
 
