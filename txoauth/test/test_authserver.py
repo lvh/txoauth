@@ -51,6 +51,18 @@ class ClientTestCase(TestCase):
         self._genericMemoizationTest(BOGUS_IDENTIFIER, None)
 
 
+    def test_identifier(self):
+        c = cred.Client(IDENTIFIER, redirectURIFactory)
+        self.assertEqual(IDENTIFIER, c.identifier)
+
+
+    def test_identifier_immutability(self):
+        c = cred.Client(IDENTIFIER, redirectURIFactory)
+        def mutate():
+            c.identifier = IDENTIFIER
+        self.assertRaises(AttributeError, mutate)
+
+
 
 class ClientRealmTestCase(TestCase):
     def test_interface(self):
