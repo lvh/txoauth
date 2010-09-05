@@ -16,13 +16,13 @@ class SimpleRedirectURIFactory(object):
     """
     implements(IRedirectURIFactory)
 
-    def __init__(self, **redirectionURIs):
+    def __init__(self, **redirectURIs):
         """
         Initializes this URI factory.
 
         TODO: finish docstring
         """
-        self._uris = redirectionURIs
+        self._uris = redirectURIs
 
 
     def getRedirectURI(self, clientIdentifier):
