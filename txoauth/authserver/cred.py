@@ -27,6 +27,11 @@ class Client(object):
         self._redirectURI = _UNSET
 
 
+    @property
+    def identifier(self):
+        return self._identifier
+
+
     def getRedirectURI(self):
         if self._redirectURI is _UNSET:
             d = self._redirectURIFactory.getRedirectURI(self._identifier)
