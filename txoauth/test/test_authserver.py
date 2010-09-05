@@ -127,13 +127,13 @@ class ClientIdentifierTestCase(TestCase):
         self.assertRaises(AttributeError, mutate)
 
 
-    def test_callbackURLImmutability(self):
+    def test_redirectURIImmutability(self):
         def mutate():
             self.credentials.callbackURL = BOGUS_URI
         self.assertRaises(AttributeError, mutate)
 
 
-    def test_callbackURLImmutability_sameIdentifier(self):
+    def test_redirectURIImmutability_sameIdentifier(self):
         def mutate():
             self.credentials.callbackURL = self.credentials.callbackURL
         self.assertRaises(AttributeError, mutate)
