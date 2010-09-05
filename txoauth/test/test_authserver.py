@@ -2,7 +2,7 @@
 Tests for txOAuth authentication servers.
 """
 from txoauth.authserver import interfaces, cred
-from txoauth.contrib.simple import SimpleRedirectionURIFactory
+from txoauth.contrib.simple import SimpleRedirectURIFactory
 
 from twisted.trial.unittest import TestCase
 from twisted.cred.portal import IRealm
@@ -16,7 +16,7 @@ BOGUS_IDENTIFIER, BOGUS_SECRET = "parrot", "dead"
 URI, BOGUS_URI = "hungarian", "phrasebook"
 
 
-redirectURIFactory = SimpleRedirectionURIFactory(**{IDENTIFIER: URI})
+redirectURIFactory = SimpleRedirectURIFactory(**{IDENTIFIER: URI})
 
 
 class ClientTestCase(TestCase):

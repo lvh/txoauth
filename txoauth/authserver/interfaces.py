@@ -22,7 +22,7 @@ class IClient(Interface):
 
 
 
-class IRedirectionURIFactory(Interface):
+class IRedirectURIFactory(Interface):
     """
     A factory for client redirect URIs.
 

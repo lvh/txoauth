@@ -1,20 +1,20 @@
 """
 Simple implementations of some txOAuth interfaces.
 """
-from txoauth.authserver.interfaces import IRedirectionURIFactory
+from txoauth.authserver.interfaces import IRedirectURIFactory
 
 from twisted.internet import defer
 
 from zope.interface import implements
 
 
-class SimpleRedirectionURIFactory(object):
+class SimpleRedirectURIFactory(object):
     """
-    A simplistic, in-memory redirection URI factory.
+    A simplistic, in-memory redirect URI factory.
 
     This is a wrapper around a dictionary.
     """
-    implements(IRedirectionURIFactory)
+    implements(IRedirectURIFactory)
 
     def __init__(self, **redirectionURIs):
         """
