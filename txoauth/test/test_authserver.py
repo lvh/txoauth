@@ -2,7 +2,7 @@
 Tests for txOAuth authentication servers.
 """
 from txoauth.authserver import interfaces, cred
-from txoauth.contrib.simple import SimpleCallbackURLFactory
+from txoauth.contrib.simple import SimpleRedirectionURIFactory
 
 from twisted.trial.unittest import TestCase
 from twisted.cred.portal import IRealm
@@ -13,10 +13,10 @@ from zope.interface import implements
 
 IDENTIFIER, SECRET = "spam", "eggs"
 BOGUS_IDENTIFIER, BOGUS_SECRET = "parrot", "dead"
-URL, BOGUS_URL = "hungarian", "phrasebook"
+URI, BOGUS_URI = "hungarian", "phrasebook"
 
 
-urlFactory = SimpleCallbackURLFactory(**{IDENTIFIER: URL})
+redirectURIFactory = SimpleRedirectionURIFactory(**{IDENTIFIER: URI})
 
 
 class ClientTestCase(TestCase):
@@ -25,25 +25,26 @@ class ClientTestCase(TestCase):
 
 
     def _genericMemoizationTest(self, identifier, expectedURL):
-        c = cred.Client(identifier, urlFactory)
-        v = {"old": c._url, "actual": None} # please backport nonlocal
-        d = c.getCallbackURL()
+        c = cred.Client(identifier, redirectURIFactory)
+        v = {"old": c._redirectURI, "actual": None} # please backport nonlocal
+        d = c.getRedirectURI()
 
         @d.addCallback
-        def testMemoization(url):
-            self.assertNotEqual(v["old"], url)
-            v["actual"] = url # please, please backport nonlocal
-            return c.getCallbackURL()
+        def testMemoization(uri):
+            self.assertNotEqual(v["old"], uri)
+            v["actual"] = uri # please, please backport nonlocal
+            return c.getRedirectURI()
+
         @d.addCallback
-        def testMemoized(url):
-            self.assertNotEqual(v["old"], url)
-            self.assertEqual(v["actual"], url)
+        def testMemoized(uri):
+            self.assertNotEqual(v["old"], uri)
+            self.assertEqual(v["actual"], uri)
 
         return d
 
 
     def test_memoization_simple(self):
-        self._genericMemoizationTest(IDENTIFIER, URL)
+        self._genericMemoizationTest(IDENTIFIER, URI)
 
 
     def test_memoization_missingURL(self):
@@ -58,8 +59,8 @@ class ClientRealmTestCase(TestCase):
 
     def _genericTest(self, identifier=IDENTIFIER, mind=None,
                      requestedInterfaces=(interfaces.IClient,),
-                     expectedURL=URL):
-        r = cred.ClientRealm(urlFactory)
+                     expectedURI=URI):
+        r = cred.ClientRealm(redirectURIFactory)
 
         d = r.requestAvatar(identifier, mind, *requestedInterfaces)
 
@@ -68,11 +69,11 @@ class ClientRealmTestCase(TestCase):
             interface, client, logout = avatar
             self.assertEqual(interface, interfaces.IClient)
             self.assertTrue(interfaces.IClient.providedBy(client))
-            return client.getCallbackURL()
+            return client.getRedirectURI()
 
         @d.addCallback
-        def callbackURLCheck(url):
-            self.assertEquals(url, expectedURL)
+        def redirectURICheck(uri):
+            self.assertEquals(uri, expectedURI)
 
         return d
 
@@ -81,8 +82,8 @@ class ClientRealmTestCase(TestCase):
         self._genericTest()
 
 
-    def test_missingURL(self):
-        self._genericTest(identifier=BOGUS_IDENTIFIER, expectedURL=None)
+    def test_missingURI(self):
+        self._genericTest(identifier=BOGUS_IDENTIFIER, expectedURI=None)
 
 
     def test_multipleInterfaces(self):
@@ -90,7 +91,7 @@ class ClientRealmTestCase(TestCase):
 
 
     def test_badInterface(self):
-        r = cred.ClientRealm(urlFactory)
+        r = cred.ClientRealm(redirectURIFactory)
         self.assertRaises(NotImplementedError,
                           r.requestAvatar, IDENTIFIER, None, object())
 
@@ -126,15 +127,15 @@ class ClientIdentifierTestCase(TestCase):
         self.assertRaises(AttributeError, mutate)
 
 
-    def test_callbackURLImmutability(self):
+    def test_redirectURIImmutability(self):
         def mutate():
-            self.credentials.callbackURL = BOGUS_URL
+            self.credentials.redirectURI = BOGUS_URI
         self.assertRaises(AttributeError, mutate)
 
 
-    def test_callbackURLImmutability_sameIdentifier(self):
+    def test_redirectURIImmutability_sameIdentifier(self):
         def mutate():
-            self.credentials.callbackURL = self.credentials.callbackURL
+            self.credentials.redirectURI = self.credentials.redirectURI
         self.assertRaises(AttributeError, mutate)
 
 

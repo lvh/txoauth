@@ -2,21 +2,21 @@
 Tests for contributed txOAuth code.
 """
 from txoauth.authserver import interfaces
-from txoauth.contrib.simple import SimpleCallbackURLFactory
-from txoauth.test.test_authserver import IDENTIFIER, BOGUS_IDENTIFIER, URL
+from txoauth.contrib.simple import SimpleRedirectionURIFactory
+from txoauth.test.test_authserver import IDENTIFIER, BOGUS_IDENTIFIER, URI
 
 from twisted.trial.unittest import TestCase
 
 
-class SimpleCallbackURLFactoryTestCase(TestCase):
+class SimpleRedirectionURIFactoryTestCase(TestCase):
     def setUp(self):
-        self.empty = SimpleCallbackURLFactory()
-        self.withURLs = SimpleCallbackURLFactory(**{IDENTIFIER: URL})
+        self.empty = SimpleRedirectionURIFactory()
+        self.withURLs = SimpleRedirectionURIFactory(**{IDENTIFIER: URI})
 
 
     def test_interface(self):
-        self.assertTrue(interfaces.ICallbackURLFactory
-                        .implementedBy(SimpleCallbackURLFactory))
+        self.assertTrue(interfaces.IRedirectionURIFactory
+                        .implementedBy(SimpleRedirectionURIFactory))
 
 
     def _genericFactoryTest(self, factory, identifier, expectedURL):
@@ -32,7 +32,7 @@ class SimpleCallbackURLFactoryTestCase(TestCase):
 
 
     def test_registeredURL(self):
-        self._genericFactoryTest(self.withURLs, IDENTIFIER, URL)
+        self._genericFactoryTest(self.withURLs, IDENTIFIER, URI)
 
 
     def test_missingURL(self):

@@ -21,24 +21,24 @@ class Client(object):
     """
     implements(IClient)
 
-    def __init__(self, identifier, callbackURLFactory):
+    def __init__(self, identifier, redirectURIFactory):
         self._identifier = identifier
-        self._urlFactory = callbackURLFactory
-        self._url = _UNSET
+        self._redirectURIFactory = redirectURIFactory
+        self._redirectURI = _UNSET
 
 
-    def getCallbackURL(self):
-        if self._url is _UNSET:
-            d = self._urlFactory.get(self._identifier)
+    def getRedirectURI(self):
+        if self._redirectURI is _UNSET:
+            d = self._redirectURIFactory.get(self._identifier)
 
             @d.addCallback
-            def memoize(url):
-                self._url = url
-                return url # Caller expects deferred to fire with URL
+            def memoize(uri):
+                self._redirectURI = uri
+                return uri
 
             return d
         else:
-            return defer.succeed(self._url)
+            return defer.succeed(self._redirectURI)
 
 
 
@@ -48,13 +48,13 @@ class ClientRealm(object):
     """
     implements(IRealm)
 
-    def __init__(self, callbackURLFactory):
+    def __init__(self, redirectURIFactory):
         """
         Initializes a client realm.
 
         TODO: finish docstring
         """
-        self._urlFactory = callbackURLFactory
+        self._redirectURIFactory = redirectURIFactory
 
 
     def requestAvatar(self, clientIdentifier, mind=None, *interfaces):
@@ -64,7 +64,7 @@ class ClientRealm(object):
         TODO: finish docstring
         """
         if IClient in interfaces:
-            c = Client(clientIdentifier, self._urlFactory)
+            c = Client(clientIdentifier, self._redirectURIFactory)
             return defer.succeed((IClient, c, lambda: None))
         else:
             raise NotImplementedError("ClientRealm only produces IClients")
@@ -74,9 +74,9 @@ class ClientRealm(object):
 class ClientIdentifier(object):
     implements(IClientIdentifier)
 
-    def __init__(self, identifier, callbackURL=None):
+    def __init__(self, identifier, redirectURI=None):
         self._identifier = identifier
-        self._cbURL = callbackURL
+        self._redirectURI = redirectURI
 
 
     @property
@@ -85,16 +85,16 @@ class ClientIdentifier(object):
 
 
     @property
-    def callbackURL(self):
-        return self._cbURL
+    def redirectURI(self):
+        return self._redirectURI
 
 
 
 class ClientIdentifierSecret(ClientIdentifier):
     implements(IClientIdentifierSecret)
 
-    def __init__(self, identifier, secret, callbackURL=None):
-        super(ClientIdentifierSecret, self).__init__(identifier, callbackURL)
+    def __init__(self, identifier, secret, redirectURI=None):
+        super(ClientIdentifierSecret, self).__init__(identifier, redirectURI)
         self._secret = secret
 
 

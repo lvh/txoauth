@@ -11,29 +11,29 @@ class IClient(Interface):
     A representation of an OAuth client.
     """
 
-    def getCallbackURL():
+    def getRedirectURI():
         """
-        Gets the registered callback URL for this client.
+        Gets the registered redirection URI for this client.
 
         @rtype: C{Deferred}
-        @return: A C{Deferred} which will fire with the URL, or C{None} if no
-        URL has been registered.
+        @return: A C{Deferred} which will fire with the URI, or C{None} if no
+        URI has been registered.
         """
 
 
 
-class ICallbackURLFactory(Interface):
+class IRedirectionURIFactory(Interface):
     """
-    A factory for client callback URLs.
+    A factory for client redirection URIs.
 
     This typically is just a fancy storage mechanism.
     """
     def get(clientIdentifier):
         """
-        Gets the callback URL for a particular client.
+        Gets the redirection URI for a particular client.
 
-        @return: A C{Deferred} that will fire with the callback URL (C{str})
-        or C{None}, if no URL has been registered.
+        @return: A C{Deferred} that will fire with the redirection URI (C{str})
+        or C{None}, if no URI has been registered.
         """
 
 
@@ -50,11 +50,11 @@ class IClientIdentifier(ICredentials):
         """)
 
 
-    callbackURL = Attribute(
+    redirectURI = Attribute(
         """
-        The callback URL presented in a request.
+        The redirection URI presented in a request.
 
-        If the callback URL was not present in the request, C{None}.
+        If no redirection URI was present in the request, C{None}.
 
         @type: C{str} or C{None}
         """)
