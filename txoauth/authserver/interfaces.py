@@ -50,11 +50,11 @@ class IClientIdentifier(ICredentials):
         """)
 
 
-    callbackURL = Attribute(
+    redirectURI = Attribute(
         """
-        The callback URL presented in a request.
+        The redirection URI presented in a request.
 
-        If the callback URL was not present in the request, C{None}.
+        If no redirection URI was present in the request, C{None}.
 
         @type: C{str} or C{None}
         """)
