@@ -48,13 +48,13 @@ class ClientRealm(object):
     """
     implements(IRealm)
 
-    def __init__(self, callbackURLFactory):
+    def __init__(self, redirectURIFactory):
         """
         Initializes a client realm.
 
         TODO: finish docstring
         """
-        self._urlFactory = callbackURLFactory
+        self._redirectURIFactory = redirectURIFactory
 
 
     def requestAvatar(self, clientIdentifier, mind=None, *interfaces):
@@ -64,7 +64,7 @@ class ClientRealm(object):
         TODO: finish docstring
         """
         if IClient in interfaces:
-            c = Client(clientIdentifier, self._urlFactory)
+            c = Client(clientIdentifier, self._redirectURIFactory)
             return defer.succeed((IClient, c, lambda: None))
         else:
             raise NotImplementedError("ClientRealm only produces IClients")
