@@ -8,7 +8,7 @@ from txoauth.test.test_authserver import IDENTIFIER, BOGUS_IDENTIFIER, URI
 from twisted.trial.unittest import TestCase
 
 
-class SimpleCallbackURLFactoryTestCase(TestCase):
+class SimpleRedirectionURIFactoryTestCase(TestCase):
     def setUp(self):
         self.empty = SimpleRedirectionURIFactory()
         self.withURLs = SimpleRedirectionURIFactory(**{IDENTIFIER: URI})
