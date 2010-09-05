@@ -13,10 +13,10 @@ from zope.interface import implements
 
 IDENTIFIER, SECRET = "spam", "eggs"
 BOGUS_IDENTIFIER, BOGUS_SECRET = "parrot", "dead"
-URL, BOGUS_URL = "hungarian", "phrasebook"
+URI, BOGUS_URI = "hungarian", "phrasebook"
 
 
-redirectURIFactory = SimpleCallbackURLFactory(**{IDENTIFIER: URL})
+redirectURIFactory = SimpleCallbackURLFactory(**{IDENTIFIER: URI})
 
 
 class ClientTestCase(TestCase):
@@ -44,7 +44,7 @@ class ClientTestCase(TestCase):
 
 
     def test_memoization_simple(self):
-        self._genericMemoizationTest(IDENTIFIER, URL)
+        self._genericMemoizationTest(IDENTIFIER, URI)
 
 
     def test_memoization_missingURL(self):
@@ -59,7 +59,7 @@ class ClientRealmTestCase(TestCase):
 
     def _genericTest(self, identifier=IDENTIFIER, mind=None,
                      requestedInterfaces=(interfaces.IClient,),
-                     expectedURI=URL):
+                     expectedURI=URI):
         r = cred.ClientRealm(redirectURIFactory)
 
         d = r.requestAvatar(identifier, mind, *requestedInterfaces)
@@ -129,7 +129,7 @@ class ClientIdentifierTestCase(TestCase):
 
     def test_callbackURLImmutability(self):
         def mutate():
-            self.credentials.callbackURL = BOGUS_URL
+            self.credentials.callbackURL = BOGUS_URI
         self.assertRaises(AttributeError, mutate)
 
 
