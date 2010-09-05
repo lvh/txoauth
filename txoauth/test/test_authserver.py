@@ -59,7 +59,7 @@ class ClientRealmTestCase(TestCase):
 
     def _genericTest(self, identifier=IDENTIFIER, mind=None,
                      requestedInterfaces=(interfaces.IClient,),
-                     expectedURL=URL):
+                     expectedURI=URL):
         r = cred.ClientRealm(redirectURIFactory)
 
         d = r.requestAvatar(identifier, mind, *requestedInterfaces)
@@ -69,11 +69,11 @@ class ClientRealmTestCase(TestCase):
             interface, client, logout = avatar
             self.assertEqual(interface, interfaces.IClient)
             self.assertTrue(interfaces.IClient.providedBy(client))
-            return client.getCallbackURL()
+            return client.getRedirectURI()
 
         @d.addCallback
-        def callbackURLCheck(url):
-            self.assertEquals(url, expectedURL)
+        def redirectURICheck(uri):
+            self.assertEquals(uri, expectedURI)
 
         return d
 
@@ -82,8 +82,8 @@ class ClientRealmTestCase(TestCase):
         self._genericTest()
 
 
-    def test_missingURL(self):
-        self._genericTest(identifier=BOGUS_IDENTIFIER, expectedURL=None)
+    def test_missingURI(self):
+        self._genericTest(identifier=BOGUS_IDENTIFIER, expectedURI=None)
 
 
     def test_multipleInterfaces(self):
