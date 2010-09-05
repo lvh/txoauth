@@ -29,7 +29,7 @@ class Client(object):
 
     def getRedirectURI(self):
         if self._redirectURI is _UNSET:
-            d = self._redirectURIFactory.get(self._identifier)
+            d = self._redirectURIFactory.getRedirectURI(self._identifier)
 
             @d.addCallback
             def memoize(uri):

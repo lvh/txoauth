@@ -2,25 +2,25 @@
 Tests for simple txOAuth implementations.
 """
 from txoauth.authserver import interfaces
-from txoauth.contrib.simple import SimpleRedirectionURIFactory
+from txoauth.contrib.simple import SimpleRedirectURIFactory
 from txoauth.test.test_authserver import IDENTIFIER, BOGUS_IDENTIFIER, URI
 
 from twisted.trial.unittest import TestCase
 
 
-class SimpleRedirectionURIFactoryTestCase(TestCase):
+class SimpleRedirectURIFactoryTestCase(TestCase):
     def setUp(self):
-        self.empty = SimpleRedirectionURIFactory()
-        self.withURLs = SimpleRedirectionURIFactory(**{IDENTIFIER: URI})
+        self.empty = SimpleRedirectURIFactory()
+        self.withURLs = SimpleRedirectURIFactory(**{IDENTIFIER: URI})
 
 
     def test_interface(self):
-        self.assertTrue(interfaces.IRedirectionURIFactory
-                        .implementedBy(SimpleRedirectionURIFactory))
+        self.assertTrue(interfaces.IRedirectURIFactory
+                        .implementedBy(SimpleRedirectURIFactory))
 
 
     def _genericFactoryTest(self, factory, identifier, expectedURL):
-        d = factory.get(identifier)
+        d = factory.getRedirectURI(identifier)
         @d.addCallback
         def cb(url):
             self.assertEquals(url, expectedURL)
