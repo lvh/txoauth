@@ -52,9 +52,9 @@ class IClientIdentifier(ICredentials):
 
     redirectURI = Attribute(
         """
-        The redirection URI presented in a request.
+        The redirect URI presented in a request.
 
-        If no redirection URI was present in the request, C{None}.
+        If no redirect URI was present in the request, C{None}.
 
         @type: C{str} or C{None}
         """)
