@@ -10,10 +10,16 @@ class IClient(Interface):
     """
     A representation of an OAuth client.
     """
+    identifier = Attribute(
+        """
+        The identifier for this client
+
+        @type: C{str}
+        """)
 
     def getRedirectURI():
         """
-        Gets the registered redirection URI for this client.
+        Gets the registered redirect URI for this client.
 
         @rtype: C{Deferred}
         @return: A C{Deferred} which will fire with the URI, or C{None} if no
