@@ -2,7 +2,7 @@
 Tests for contributed txOAuth code.
 """
 from txoauth.authserver import interfaces
-from txoauth.contrib.simple import SimpleCallbackURLFactory
+from txoauth.contrib.simple import SimpleRedirectionURIFactory
 from txoauth.test.test_authserver import IDENTIFIER, BOGUS_IDENTIFIER, URI
 
 from twisted.trial.unittest import TestCase
@@ -10,13 +10,13 @@ from twisted.trial.unittest import TestCase
 
 class SimpleCallbackURLFactoryTestCase(TestCase):
     def setUp(self):
-        self.empty = SimpleCallbackURLFactory()
-        self.withURLs = SimpleCallbackURLFactory(**{IDENTIFIER: URI})
+        self.empty = SimpleRedirectionURIFactory()
+        self.withURLs = SimpleRedirectionURIFactory(**{IDENTIFIER: URI})
 
 
     def test_interface(self):
         self.assertTrue(interfaces.IRedirectionURIFactory
-                        .implementedBy(SimpleCallbackURLFactory))
+                        .implementedBy(SimpleRedirectionURIFactory))
 
 
     def _genericFactoryTest(self, factory, identifier, expectedURL):

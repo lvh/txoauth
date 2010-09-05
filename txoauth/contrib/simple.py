@@ -8,23 +8,23 @@ from twisted.internet import defer
 from zope.interface import implements
 
 
-class SimpleCallbackURLFactory(object):
+class SimpleRedirectionURIFactory(object):
     """
-    A simplistic, in-memory callback URL factory.
+    A simplistic, in-memory redirection URI factory.
 
     This is a wrapper around a dictionary.
     """
     implements(IRedirectionURIFactory)
 
-    def __init__(self, **callbackURLs):
+    def __init__(self, **redirectionURIs):
         """
-        Initializes a SimpleCallbackURLFactory.
+        Initializes this URI factory.
 
         TODO: finish docstring
         """
-        self._urls = callbackURLs
+        self._uris = redirectionURIs
 
 
     def get(self, clientIdentifier):
-        url = self._urls.get(clientIdentifier)
-        return defer.succeed(url)
+        uri = self._uris.get(clientIdentifier)
+        return defer.succeed(uri)
