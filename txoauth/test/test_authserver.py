@@ -16,7 +16,7 @@ BOGUS_IDENTIFIER, BOGUS_SECRET = "parrot", "dead"
 URL, BOGUS_URL = "hungarian", "phrasebook"
 
 
-urlFactory = SimpleCallbackURLFactory(**{IDENTIFIER: URL})
+redirectURIFactory = SimpleCallbackURLFactory(**{IDENTIFIER: URL})
 
 
 class ClientTestCase(TestCase):
@@ -25,19 +25,20 @@ class ClientTestCase(TestCase):
 
 
     def _genericMemoizationTest(self, identifier, expectedURL):
-        c = cred.Client(identifier, urlFactory)
-        v = {"old": c._url, "actual": None} # please backport nonlocal
-        d = c.getCallbackURL()
+        c = cred.Client(identifier, redirectURIFactory)
+        v = {"old": c._redirectURI, "actual": None} # please backport nonlocal
+        d = c.getRedirectURI()
 
         @d.addCallback
-        def testMemoization(url):
-            self.assertNotEqual(v["old"], url)
-            v["actual"] = url # please, please backport nonlocal
-            return c.getCallbackURL()
+        def testMemoization(uri):
+            self.assertNotEqual(v["old"], uri)
+            v["actual"] = uri # please, please backport nonlocal
+            return c.getRedirectURI()
+
         @d.addCallback
-        def testMemoized(url):
-            self.assertNotEqual(v["old"], url)
-            self.assertEqual(v["actual"], url)
+        def testMemoized(uri):
+            self.assertNotEqual(v["old"], uri)
+            self.assertEqual(v["actual"], uri)
 
         return d
 
@@ -59,7 +60,7 @@ class ClientRealmTestCase(TestCase):
     def _genericTest(self, identifier=IDENTIFIER, mind=None,
                      requestedInterfaces=(interfaces.IClient,),
                      expectedURL=URL):
-        r = cred.ClientRealm(urlFactory)
+        r = cred.ClientRealm(redirectURIFactory)
 
         d = r.requestAvatar(identifier, mind, *requestedInterfaces)
 
@@ -90,7 +91,7 @@ class ClientRealmTestCase(TestCase):
 
 
     def test_badInterface(self):
-        r = cred.ClientRealm(urlFactory)
+        r = cred.ClientRealm(redirectURIFactory)
         self.assertRaises(NotImplementedError,
                           r.requestAvatar, IDENTIFIER, None, object())
 
