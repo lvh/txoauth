@@ -13,6 +13,7 @@ Contents:
 
    gettingstarted.rst
    common.rst
+   authserver.rst
 
 Indices and tables
 ==================
