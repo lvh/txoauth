@@ -16,3 +16,18 @@ if you're not yet familiar with those concepts.
 
 .. _Twisted Cred howto: http://twistedmatrix.com/documents/current/core/howto/cred.html
 .. _components introduction: http://twistedmatrix.com/documents/current/core/howto/components.html
+
+txOAuth follows the latest revision of the `OAuth 2.0 specification`_, which
+is currently still in draft, as much as possible. Any discrepancy should
+probably be reported as a bug.
+
+.. _OAuth 2.0 specification: http://tools.ietf.org/html/draft-ietf-oauth-v2
+
+Getting involved
+----------------
+
+txOAuth uses Launchpad for code hosting, and tracking bugs and
+specifications. If you would like to get involved (that includes reporting
+bugs!), check out the `txOAuth Launchpad page`_.
+
+.. _txOAuth Launchpad page: https://launchpad.net/txoauth

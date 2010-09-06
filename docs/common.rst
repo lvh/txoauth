@@ -1,6 +1,9 @@
 Common concepts
 ===============
 
+Some concepts are common to several of the OAuth interactions. These are
+explained (briefly) here.
+
 Client portals
 --------------
 
