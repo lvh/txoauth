@@ -29,17 +29,17 @@ Token endpoints
 ---------------
 The second part of an authentication server is the token endpoint. Token
 endpoints are responsible for turning all sorts of credentials that amount to
-an access grant into a token that will actually let you access something.
+an access grant into a token that will actually let you access
+something. Unlike end-user authentication endpoints, token endpoints are
+sufficiently similar to each other that txOAuth provides an implementation.
 
-Unlike the end-user authentication endpoint, a class implementing the token
-endpoint is provided.
+Token endpoints operate roughly as follows:
 
-The token endpoint authenticates a client, and then tries to parse the rest of
-the request into a set of credentials.
-
-These credentials are then passed on to a Portal, which has credentials
-checkers for all the kinds of credential you want to allow. The TokenRealm
-then returns an ``IResource`` that tells the client about its new token.
+1. The client is authenticated (using a client portal).
+2. The access grant credentials are parsed.
+3. The credentials are passed to a token portal
+    a. The portal's credentials checkers check the credentials.
+    b. The realm requests a token and returns it to the client.
 
 If that last bit seems a bit arcane to you, you might want to read JP
 Calderone's `article`_ on ``twisted.cred`` in combination with
