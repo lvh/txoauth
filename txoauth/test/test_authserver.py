@@ -2,6 +2,8 @@
 Tests for txOAuth authentication servers.
 """
 from txoauth.authserver import interfaces, cred
+from txoauth.authserver.interfaces import (IClientIdentifier,
+                                           IClientIdentifierSecret)
 from txoauth.contrib.simple import SimpleRedirectURIFactory
 
 from twisted.trial.unittest import TestCase
@@ -260,39 +262,47 @@ requestArgs = {
 secondSpecificationRequest = MockRequest(args=requestArgs)
 
 
-
-class ClientCredentialsExtractionTestCase(TestCase):
-    def test_simple_authorizationHeader(self):
-        c = cred._extractClientCredentials(simpleAuthHeaderRequest)
-
-        self.assertTrue(interfaces.IClientIdentifierSecret.providedBy(c))
-        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+_ALL = object()
 
 
-    def test_simple_urlEncoded_identifierOnly(self):
-        c = cred._extractClientCredentials(simpleURLEncodedRequest)
+class _CredentialsExtractionTest(TestCase):
+    interfaces = ()
+    factory = None
 
-        self.assertFalse(interfaces.IClientIdentifierSecret.providedBy(c))
-        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+    def _test_adaptation(self, request, expectedInterfaces=_ALL):
+        c = self.factory(request)
+
+        for interface in self.interfaces:
+            provided = interface.providedBy(c)
+            expected = (expectedInterfaces is _ALL
+                        or interface in expectedInterfaces)
+
+            self.assertTrue(provided if expected else not provided)
 
 
-    def test_simple_urlEncoded_identifierAndSecret(self):
-        c = cred._extractClientCredentials(simpleURLEncodedRequestWithSecret)
 
-        self.assertTrue(interfaces.IClientIdentifierSecret.providedBy(c))
-        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+class _SpecificationTests(_CredentialsExtractionTest):
+    def _test_broken(self, request):
+        """
+        Tests that trying to parse a particular request raises TypeError.
+        """
+        self.assertRaises(TypeError, self.factory, request)
 
 
-    def test_broken_noIdentifierOrSecret(self):
-        self.assertRaises(TypeError,
-                          cred._extractClientCredentials,
-                          emptyRequest)
+    def test_broken_empty(self):
+        self._test_broken(emptyRequest)
 
 
     def test_broken_SecretNoIdentifier(self):
-        self.assertRaises(TypeError,
-                          cred._extractClientCredentials,
-                          secretButNoIdentifierRequest)
+        self._test_broken(secretButNoIdentifierRequest)
+
+
+    def test_simple_authorizationHeader(self):
+        self._test_adaptation(simpleAuthHeaderRequest)
+
+
+    def test_simple_urlEncoded_identifierAndSecret(self):
+        self._test_adaptation(simpleURLEncodedRequestWithSecret)
 
 
     def test_simple_fromSpecification_first(self):
@@ -300,10 +310,7 @@ class ClientCredentialsExtractionTestCase(TestCase):
         Tests for a mocked version of the Authorization header example from
         the specification.
         """
-        c = cred._extractClientCredentials(firstSpecificationRequest)
-
-        self.assertTrue(interfaces.IClientIdentifierSecret.providedBy(c))
-        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+        self._test_adaptation(firstSpecificationRequest)
 
 
     def test_simple_fromSpecification_second(self):
@@ -311,43 +318,29 @@ class ClientCredentialsExtractionTestCase(TestCase):
         Tests for a mocked version of the example from the specification
         without an authorization header.
         """
-        c = cred._extractClientCredentials(secondSpecificationRequest)
-
-        self.assertTrue(interfaces.IClientIdentifierSecret.providedBy(c))
-        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+        self._test_adaptation(secondSpecificationRequest)
 
 
 
-class ClientIdentifierAdaptationTestCase(TestCase):
-    def test_specificationRequests_first(self):
-        c = interfaces.IClientIdentifier(firstSpecificationRequest)
-        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+class ClientCredentialsExtractionTestCase(_SpecificationTests):
+    interfaces = (IClientIdentifier, IClientIdentifierSecret)
+    factory = staticmethod(cred._extractClientCredentials)
 
-
-    def test_specificationRequests_second(self):
-        c = interfaces.IClientIdentifier(secondSpecificationRequest)
-        self.assertTrue(interfaces.IClientIdentifier.providedBy(c))
+    def test_simple_urlEncoded_identifierOnly(self):
+        self._test_adaptation(simpleURLEncodedRequest,
+                              expectedInterfaces=(IClientIdentifier,))
 
 
 
-class ClientIdentifierSecretAdaptationTestCase(TestCase):
-    def test_specificationRequests_first(self):
-        c = interfaces.IClientIdentifierSecret(firstSpecificationRequest)
-        self.assertTrue(interfaces.IClientIdentifierSecret.providedBy(c))
+class ClientIdentifierAdaptationTestCase(_SpecificationTests):
+    factory = IClientIdentifier
+    interfaces = (IClientIdentifier,)
 
 
-    def test_specificationRequests_second(self):
-        c = interfaces.IClientIdentifierSecret(secondSpecificationRequest)
-        self.assertTrue(interfaces.IClientIdentifierSecret.providedBy(c))
 
+class ClientIdentifierSecretAdaptationTestCase(_SpecificationTests):
+    factory = IClientIdentifierSecret
+    interfaces = (IClientIdentifierSecret,)
 
     def test_noSecretPresent(self):
-        self.assertRaises(TypeError,
-                          interfaces.IClientIdentifierSecret,
-                          simpleURLEncodedRequest)
-
-
-    def test_noSecretPresent_emptyrequest(self):
-        self.assertRaises(TypeError,
-                          interfaces.IClientIdentifierSecret,
-                          emptyRequest)
+        self._test_broken(simpleURLEncodedRequest)
