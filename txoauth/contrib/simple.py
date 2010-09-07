@@ -1,7 +1,7 @@
 """
 Simple implementations of some txOAuth interfaces.
 """
-from txoauth.authserver.interfaces import IRedirectURIFactory
+from txoauth.interfaces import IRedirectURIFactory
 
 from twisted.internet import defer
 

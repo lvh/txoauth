@@ -1,9 +1,10 @@
 """
 Tests for txOAuth authentication servers.
 """
-from txoauth.authserver import interfaces, cred
-from txoauth.authserver.interfaces import (IClientIdentifier,
-                                           IClientIdentifierSecret)
+from txoauth.authserver import cred
+from txoauth.interfaces import (IClient,
+                                IClientIdentifier,
+                                IClientIdentifierSecret)
 from txoauth.contrib.simple import SimpleRedirectURIFactory
 
 from twisted.trial.unittest import TestCase
@@ -23,7 +24,7 @@ redirectURIFactory = SimpleRedirectURIFactory(**{IDENTIFIER: URI})
 
 class ClientTestCase(TestCase):
     def test_interface(self):
-        self.assertTrue(interfaces.IClient.implementedBy(cred.Client))
+        self.assertTrue(IClient.implementedBy(cred.Client))
 
 
     def _genericMemoizationTest(self, identifier, expectedURL):
@@ -72,7 +73,7 @@ class ClientRealmTestCase(TestCase):
 
 
     def _genericTest(self, identifier=IDENTIFIER, mind=None,
-                     requestedInterfaces=(interfaces.IClient,),
+                     requestedInterfaces=(IClient,),
                      expectedURI=URI):
         r = cred.ClientRealm(redirectURIFactory)
 
@@ -81,8 +82,8 @@ class ClientRealmTestCase(TestCase):
         @d.addCallback
         def interfaceCheck(avatar):
             interface, client, logout = avatar
-            self.assertEqual(interface, interfaces.IClient)
-            self.assertTrue(interfaces.IClient.providedBy(client))
+            self.assertEqual(interface, IClient)
+            self.assertTrue(IClient.providedBy(client))
             return client.getRedirectURI()
 
         @d.addCallback
@@ -101,7 +102,7 @@ class ClientRealmTestCase(TestCase):
 
 
     def test_multipleInterfaces(self):
-        self._genericTest(requestedInterfaces=(interfaces.IClient, object()))
+        self._genericTest(requestedInterfaces=(IClient, object()))
 
 
     def test_badInterface(self):
@@ -117,7 +118,7 @@ class ClientIdentifierTestCase(TestCase):
 
 
     def test_interface(self):
-        self.assertTrue(interfaces.IClientIdentifier
+        self.assertTrue(IClientIdentifier
                         .implementedBy(cred.ClientIdentifier))
 
 
@@ -160,7 +161,7 @@ class ClientIdentifierSecretTestCase(ClientIdentifierTestCase):
 
 
     def test_interface_withSecret(self):
-        self.assertTrue(interfaces.IClientIdentifierSecret
+        self.assertTrue(IClientIdentifierSecret
                         .implementedBy(cred.ClientIdentifierSecret))
 
 
