@@ -1,5 +1,5 @@
 """
-Interfaces for authorization servers.
+Generic OAuth interfaces.
 """
 from twisted.cred.credentials import ICredentials
 
