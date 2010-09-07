@@ -1,8 +1,9 @@
 """
 Twisted Cred stuff for authorization servers.
 """
-from txoauth.authserver.interfaces import (IClient, IClientIdentifier,
-                                           IClientIdentifierSecret)
+from txoauth.interfaces import (IClient,
+                                IClientIdentifier,
+                                IClientIdentifierSecret)
 
 from twisted.cred.portal import IRealm
 from twisted.internet import defer

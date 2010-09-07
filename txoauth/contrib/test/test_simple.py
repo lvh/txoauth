@@ -1,7 +1,7 @@
 """
 Tests for simple txOAuth implementations.
 """
-from txoauth.authserver import interfaces
+from txoauth.interfaces import IRedirectURIFactory
 from txoauth.contrib.simple import SimpleRedirectURIFactory
 from txoauth.test.test_authserver import IDENTIFIER, BOGUS_IDENTIFIER, URI
 
@@ -15,7 +15,7 @@ class SimpleRedirectURIFactoryTestCase(TestCase):
 
 
     def test_interface(self):
-        self.assertTrue(interfaces.IRedirectURIFactory
+        self.assertTrue(IRedirectURIFactory
                         .implementedBy(SimpleRedirectURIFactory))
 
 
