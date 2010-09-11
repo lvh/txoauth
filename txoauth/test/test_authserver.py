@@ -1,7 +1,7 @@
 """
 Tests for txOAuth authentication servers.
 """
-from txoauth.authserver import cred
+from txoauth import clientcred
 from txoauth.interfaces import (IClient,
                                 IClientIdentifier,
                                 IClientIdentifierSecret)
@@ -24,11 +24,11 @@ redirectURIFactory = SimpleRedirectURIFactory(**{IDENTIFIER: URI})
 
 class ClientTestCase(TestCase):
     def test_interface(self):
-        self.assertTrue(IClient.implementedBy(cred.Client))
+        self.assertTrue(IClient.implementedBy(clientcred.Client))
 
 
     def _genericMemoizationTest(self, identifier, expectedURL):
-        c = cred.Client(identifier, redirectURIFactory)
+        c = clientcred.Client(identifier, redirectURIFactory)
         v = {"old": c._redirectURI, "actual": None} # please backport nonlocal
         d = c.getRedirectURI()
 
@@ -55,12 +55,12 @@ class ClientTestCase(TestCase):
 
 
     def test_identifier(self):
-        c = cred.Client(IDENTIFIER, redirectURIFactory)
+        c = clientcred.Client(IDENTIFIER, redirectURIFactory)
         self.assertEqual(IDENTIFIER, c.identifier)
 
 
     def test_identifier_immutability(self):
-        c = cred.Client(IDENTIFIER, redirectURIFactory)
+        c = clientcred.Client(IDENTIFIER, redirectURIFactory)
         def mutate():
             c.identifier = IDENTIFIER
         self.assertRaises(AttributeError, mutate)
@@ -69,13 +69,13 @@ class ClientTestCase(TestCase):
 
 class ClientRealmTestCase(TestCase):
     def test_interface(self):
-        self.assertTrue(IRealm.implementedBy(cred.ClientRealm))
+        self.assertTrue(IRealm.implementedBy(clientcred.ClientRealm))
 
 
     def _genericTest(self, identifier=IDENTIFIER, mind=None,
                      requestedInterfaces=(IClient,),
                      expectedURI=URI):
-        r = cred.ClientRealm(redirectURIFactory)
+        r = clientcred.ClientRealm(redirectURIFactory)
 
         d = r.requestAvatar(identifier, mind, *requestedInterfaces)
 
@@ -106,7 +106,7 @@ class ClientRealmTestCase(TestCase):
 
 
     def test_badInterface(self):
-        r = cred.ClientRealm(redirectURIFactory)
+        r = clientcred.ClientRealm(redirectURIFactory)
         self.assertRaises(NotImplementedError,
                           r.requestAvatar, IDENTIFIER, None, object())
 
@@ -114,12 +114,12 @@ class ClientRealmTestCase(TestCase):
 
 class ClientIdentifierTestCase(TestCase):
     def setUp(self):
-        self.credentials = cred.ClientIdentifier(IDENTIFIER)
+        self.credentials = clientcred.ClientIdentifier(IDENTIFIER)
 
 
     def test_interface(self):
         self.assertTrue(IClientIdentifier
-                        .implementedBy(cred.ClientIdentifier))
+                        .implementedBy(clientcred.ClientIdentifier))
 
 
     def test_simple(self):
@@ -157,12 +157,13 @@ class ClientIdentifierTestCase(TestCase):
 
 class ClientIdentifierSecretTestCase(ClientIdentifierTestCase):
     def setUp(self):
-        self.credentials = cred.ClientIdentifierSecret(IDENTIFIER, SECRET)
+        self.credentials = clientcred.ClientIdentifierSecret(IDENTIFIER,
+                                                             SECRET)
 
 
     def test_interface_withSecret(self):
         self.assertTrue(IClientIdentifierSecret
-                        .implementedBy(cred.ClientIdentifierSecret))
+                        .implementedBy(clientcred.ClientIdentifierSecret))
 
 
     def test_simple(self):
@@ -325,7 +326,7 @@ class _SpecificationTests(_CredentialsExtractionTest):
 
 class ClientCredentialsExtractionTestCase(_SpecificationTests):
     interfaces = (IClientIdentifier, IClientIdentifierSecret)
-    factory = staticmethod(cred._extractClientCredentials)
+    factory = staticmethod(clientcred._extractClientCredentials)
 
     def test_simple_urlEncoded_identifierOnly(self):
         self._test_adaptation(simpleURLEncodedRequest,

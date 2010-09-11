@@ -1,5 +1,5 @@
 """
-Twisted Cred stuff for authorization servers.
+Cred stuff for authenticating OAuth clients.
 """
 from txoauth.interfaces import (IClient,
                                 IClientIdentifier,
@@ -50,7 +50,7 @@ class Client(object):
 
 class ClientRealm(object):
     """
-    A realm that produces clients.
+    A realm that produces OAuth clients.
     """
     implements(IRealm)
 
@@ -58,7 +58,10 @@ class ClientRealm(object):
         """
         Initializes a client realm.
 
-        TODO: finish docstring
+        @param redirectURIFactory: The redirect URI factory which clients
+        produced by this realm will use to find their registered redirect URI
+        (if any).
+        @type: L{txoauth.interfaces.IRedirectURIFactory}
         """
         self._redirectURIFactory = redirectURIFactory
 
@@ -67,13 +70,18 @@ class ClientRealm(object):
         """
         Produces an avatar.
 
-        TODO: finish docstring
+        @param clientIdentifier: The client identifier. To C{twisted.cred},
+        this is the `avatarId`.
+        @type clientIdentifier: C{str}
+        @param mind: The mind object. Unused in this realm.
+        @param interfaces: The requested avatar interfaces. This realm only
+        supports L{IClient}
         """
         if IClient in interfaces:
             c = Client(clientIdentifier, self._redirectURIFactory)
             return defer.succeed((IClient, c, lambda: None))
-        else:
-            raise NotImplementedError("ClientRealm only produces IClients")
+
+        raise NotImplementedError("ClientRealm only produces IClients")
 
 
 
