@@ -3,7 +3,7 @@ Tests for simple txOAuth implementations.
 """
 from txoauth.interfaces import IRedirectURIFactory
 from txoauth.contrib.simple import SimpleRedirectURIFactory
-from txoauth.test.test_authserver import IDENTIFIER, BOGUS_IDENTIFIER, URI
+from txoauth.test.test_clientcred import IDENTIFIER, BOGUS_IDENTIFIER, URI
 
 from twisted.trial.unittest import TestCase
 

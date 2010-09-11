@@ -1,5 +1,8 @@
 """
-Generic OAuth interfaces.
+Public OAuth interfaces.
+
+These are interfaces you are likely to have to implement when building
+applications powered by OAuth.
 """
 from twisted.cred.credentials import ICredentials
 
