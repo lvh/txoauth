@@ -16,7 +16,7 @@ class SimpleRedirectURIFactoryTestCase(TestCase):
 
     def test_interface(self):
         self.assertTrue(interfaces.IRedirectURIFactory
-                        .implementedBy(SimpleRedirectURIFactory))
+                        .implementedBy(simple.SimpleRedirectURIFactory))
 
 
     def _genericFactoryTest(self, factory, identifier, expectedURL):
