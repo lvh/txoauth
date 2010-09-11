@@ -1,8 +1,8 @@
 """
 Tests for simple txOAuth implementations.
 """
-from txoauth.interfaces import IRedirectURIFactory
-from txoauth.contrib.simple import SimpleRedirectURIFactory
+from txoauth import interfaces
+from txoauth.contrib import simple
 from txoauth.test.test_clientcred import IDENTIFIER, BOGUS_IDENTIFIER, URI
 
 from twisted.trial.unittest import TestCase
@@ -10,12 +10,12 @@ from twisted.trial.unittest import TestCase
 
 class SimpleRedirectURIFactoryTestCase(TestCase):
     def setUp(self):
-        self.empty = SimpleRedirectURIFactory()
-        self.withURLs = SimpleRedirectURIFactory(**{IDENTIFIER: URI})
+        self.empty = simple.SimpleRedirectURIFactory()
+        self.withURLs = simple.SimpleRedirectURIFactory(**{IDENTIFIER: URI})
 
 
     def test_interface(self):
-        self.assertTrue(IRedirectURIFactory
+        self.assertTrue(interfaces.IRedirectURIFactory
                         .implementedBy(SimpleRedirectURIFactory))
 
 
@@ -37,3 +37,10 @@ class SimpleRedirectURIFactoryTestCase(TestCase):
 
     def test_missingURL(self):
         self._genericFactoryTest(self.withURLs, BOGUS_IDENTIFIER, None)
+
+
+
+class SimpleAssertionStoreTestCase(TestCase):
+    def test_interface(self):
+        self.assertTrue(interfaces.IAssertionStore
+                        .implementedBy(simple.SimpleAssertionStore))
