@@ -10,8 +10,6 @@ TYPE, ASSERTION = "", ""
 BOGUS_TYPE, BOGUS_ASSERTION = "", ""
 
 
-
-
 class AssertionTests(TestCase):
     def setUp(self):
         self.credentials = cred.ClientIdentifier(IDENTIFIER, URI)
