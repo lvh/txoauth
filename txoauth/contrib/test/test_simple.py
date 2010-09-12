@@ -113,4 +113,4 @@ class SimpleAssertionStoreTestCase(TestCase):
 
         @d.addErrback
         def eb(failure):
-            failure.trap("MUST_INVALIDATE") # TODO: exceptions
+            failure.trap(token.EnforcedInvalidationException)
