@@ -1,7 +1,7 @@
 """
 Simple implementations of some txOAuth interfaces.
 """
-from txoauth.token import EnforcedInvalidationException
+from txoauth.token import EnforcedInvalidationException, AssertionNotFound
 from txoauth.interfaces import IRedirectURIFactory, IAssertionStore
 
 from twisted.internet import defer
@@ -56,11 +56,11 @@ class SimpleAssertionStore(object):
                 self._assertions.remove(assertion)
                 return defer.succeed(None)
             except KeyError:
-                return defer.fail("MISSING")
+                return defer.fail(AssertionNotFound())
         else:
             if self._forceInvalidation:
                 return defer.fail(EnforcedInvalidationException())
             elif assertion in self._assertions:
                 return defer.succeed(None)
             else:
-                return defer.fail("MISSING") # TODO: create exception
+                return defer.fail(AssertionNotFound())
