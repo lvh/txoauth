@@ -41,6 +41,10 @@ class SimpleRedirectURIFactoryTestCase(TestCase):
 
 
 class SimpleAssertionStoreTestCase(TestCase):
+    def setUp(self):
+        self.store = simple.SimpleAssertionStore()
+        self.noInvalidationStore = simple.SimpleAssertionStore
+
     def test_interface(self):
         self.assertTrue(interfaces.IAssertionStore
                         .implementedBy(simple.SimpleAssertionStore))
