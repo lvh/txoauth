@@ -59,3 +59,14 @@ class Assertion(object):
     @property
     def assertion(self):
        return self._assertion
+
+
+
+class EnforcedInvalidationException(Exception):
+    """
+    Raised when attempting to check an assertion while not invalidating the
+    assertion, if the L{txoauth.interfaces.IAssertionStore} does not allow
+    that operation.
+
+    The OAuth specification asserts that assertions should be invalidated.
+    """
