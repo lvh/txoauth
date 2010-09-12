@@ -70,3 +70,10 @@ class EnforcedInvalidationException(Exception):
 
     The OAuth specification asserts that assertions should be invalidated.
     """
+
+
+
+class AssertionNotFound(Exception):
+    """
+    Raised when an assertion which was attempted to be checked wasn't found.
+    """
