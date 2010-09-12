@@ -69,7 +69,7 @@ class SimpleAssertionStoreTestCase(TestCase):
 
         @d.addErrback
         def eb(failure):
-            failure.trap("MISSING") # TODO: exceptions
+            failure.trap(token.AssertionNotFound)
 
         return d
 
@@ -82,12 +82,12 @@ class SimpleAssertionStoreTestCase(TestCase):
         return self._test_simple(self.store2)
 
 
-    def _test_missing(self, store):
-        d = store.checkAssertion(self.bogusAssertion)
+    def _test_missing(self, store, invalidate=True):
+        d = store.checkAssertion(self.bogusAssertion, invalidate)
 
         @d.addErrback
         def eb(failure):
-            failure.trap("MISSING") # TODO: exceptions
+            failure.trap(token.AssertionNotFound)
 
 
     def test_missing(self):
@@ -96,6 +96,14 @@ class SimpleAssertionStoreTestCase(TestCase):
 
     def test_missing_noForceInvalidation(self):
         self._test_missing(self.store2)
+
+
+    def test_missing_noInvalidation(self):
+        self._test_missing(self.store, invalidate=False)
+
+
+    def test_missing_noForceInvalidation_noInvalidation(self):
+        self._test_missing(self.store2, invalidate=False)
 
 
     def test_noInvalidation(self):
