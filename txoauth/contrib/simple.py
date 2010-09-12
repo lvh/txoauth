@@ -56,10 +56,10 @@ class SimpleAssertionStore(object):
                 self._assertions.remove(assertion)
                 return defer.succeed(None)
             except KeyError:
-                return defer.fail(EnforcedInvalidationException())
+                return defer.fail("MISSING")
         else:
             if self._forceInvalidation:
-                return defer.fail() # TODO: create exception
+                return defer.fail(EnforcedInvalidationException())
             elif assertion in self._assertions:
                 return defer.succeed(None)
             else:

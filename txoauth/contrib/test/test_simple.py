@@ -1,7 +1,7 @@
 """
 Tests for simple txOAuth implementations.
 """
-from txoauth import interfaces, token
+from txoauth import interfaces, token, clientcred
 from txoauth.contrib import simple
 from txoauth.test.test_clientcred import IDENTIFIER, BOGUS_IDENTIFIER, URI
 from txoauth.test.test_token import TYPE, ASSERTION
@@ -44,8 +44,9 @@ class SimpleRedirectURIFactoryTestCase(TestCase):
 
 class SimpleAssertionStoreTestCase(TestCase):
     def setUp(self):
-        self.assertion = token.Assertion(TYPE, ASSERTION)
-        self.bogusAssertion = token.Assertion(BOGUS_TYPE, BOGUS_ASSERTION)
+        c = clientcred.ClientIdentifier(IDENTIFIER, URI)
+        self.assertion = token.Assertion(c, TYPE, ASSERTION)
+        self.bogusAssertion = token.Assertion(c, BOGUS_TYPE, BOGUS_ASSERTION)
 
         self.store = simple.SimpleAssertionStore()
         self.store.addAssertion(self.assertion)
