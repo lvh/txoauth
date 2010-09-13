@@ -96,3 +96,34 @@ class IRequest(Interface):
 
         @type clientIdentifier: L{IClientIdentifier}
         """)
+
+
+
+class IAssertionStore(Interface):
+    """
+    A place to store and check grant assertions.
+
+    Assertions can be exchanged at a token endpoint for an access token. They
+    are predominantly intended for interfacing OAuth with existing auth
+    systems.
+    """
+    def addAssertion(assertion):
+        """
+        Adds an assertion to this assertion store.
+
+        @param assertion: The assertion to be added to the store.
+        @type assertion: L{txoauth.token.IAssertion}
+        """
+
+    def checkAssertion(assertion, invalidate=True):
+        """
+        Checks an assertion in this assertion store.
+
+        @param assertion: The assertion to be checked.
+        @type assertion: L{txoauth.token.IAssertion}
+        @param invalidate: If true, the assertion will be invalidated after
+        checking. Note that the specification believes this should always be
+        the case. Implementations may refuse to accept requests to keep the
+        assertion valid.
+        @type invalidate: C{bool}
+        """
