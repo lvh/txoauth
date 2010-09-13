@@ -89,21 +89,23 @@ class SimpleAssertionStoreTestCase(TestCase):
         def eb(failure):
             failure.trap(token.AssertionNotFound)
 
+        return d
+
 
     def test_missing(self):
-        self._test_missing(self.store)
+        return self._test_missing(self.store)
 
 
     def test_missing_noForceInvalidation(self):
-        self._test_missing(self.store2)
+        return self._test_missing(self.store2)
 
 
     def test_missing_noInvalidation(self):
-        self._test_missing(self.store, invalidate=False)
+        return self._test_missing(self.store, invalidate=False)
 
 
     def test_missing_noForceInvalidation_noInvalidation(self):
-        self._test_missing(self.store2, invalidate=False)
+        return self._test_missing(self.store2, invalidate=False)
 
 
     def test_noInvalidation(self):
@@ -116,6 +118,8 @@ class SimpleAssertionStoreTestCase(TestCase):
         def tryAgain(_):
             return getAssertion()
 
+        return d
+
 
     def test_enforcedInvalidation(self):
         d = self.store.checkAssertion(self.assertion, invalidate=False)
@@ -123,3 +127,5 @@ class SimpleAssertionStoreTestCase(TestCase):
         @d.addErrback
         def eb(failure):
             failure.trap(token.EnforcedInvalidationException)
+
+        return d
