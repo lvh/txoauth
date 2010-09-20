@@ -32,22 +32,24 @@ class _TokenRequestTests(TestCase):
                           self.implementer, None, *self.args, **self.kwargs)
 
 
+    def _test_immutability(self, name, value):
+        self.assertRaises(AttributeError,
+                          setattr, self.tokenRequest, name, value)
+
+
     def test_clientCredentialsImmutability_same(self):
-        def mutateClient():
-            self.assertion.clientCredentials = self.credentials
-        self.assertRaises(AttributeError, mutateClient)
+        self._test_immutability("clientCredentials", self.credentials)
 
 
     def test_clientCredentialsImmutability_different(self):
-        def mutateClient():
-            self.assertion.clientCredentials = self.bogusCredentials
-        self.assertRaises(AttributeError, mutateClient)
+        self._test_immutability("clientCredentials", self.bogusCredentials)
 
 
 
 class BaseTokenRequestTestCase(_TokenRequestTests):
     interface, implementer = token.ITokenRequest, token._BaseTokenRequest
     args, kwargs = (), {}
+
 
 TYPE, ASSERTION = "", ""
 BOGUS_TYPE, BOGUS_ASSERTION = "", ""
