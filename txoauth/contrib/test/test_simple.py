@@ -99,12 +99,7 @@ class SimpleAssertionStoreTestCase(TestCase):
     def test_missing_noForceInvalidation(self):
         return self._test_missing(self.store2)
 
-
     def test_missing_noInvalidation(self):
-        return self._test_missing(self.store, invalidate=False)
-
-
-    def test_missing_noForceInvalidation_noInvalidation(self):
         return self._test_missing(self.store2, invalidate=False)
 
 
@@ -121,7 +116,7 @@ class SimpleAssertionStoreTestCase(TestCase):
         return d
 
 
-    def test_enforcedInvalidation(self):
+    def _test_enforcedInvalidation(self, assertion):
         d = self.store.checkAssertion(self.assertion, invalidate=False)
 
         @d.addErrback
@@ -129,3 +124,11 @@ class SimpleAssertionStoreTestCase(TestCase):
             failure.trap(token.EnforcedInvalidationException)
 
         return d
+
+
+    def test_enforcedInvalidation(self):
+        return self._test_enforcedInvalidation(self.assertion)
+
+
+    def test_enforcedValidation_missingAssertion(self):
+        return self._test_enforcedInvalidation(self.bogusAssertion)
