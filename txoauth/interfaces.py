@@ -77,6 +77,7 @@ class IAssertionStore(Interface):
         @type assertion: L{txoauth.token.IAssertion}
         """
 
+
     def checkAssertion(assertion, invalidate=True):
         """
         Checks an assertion in this assertion store.
