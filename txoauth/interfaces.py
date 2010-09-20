@@ -83,9 +83,6 @@ class IAssertionStore(Interface):
 
         @param assertion: The assertion to be checked.
         @type assertion: L{txoauth.token.IAssertion}
-        @param invalidate: If true, the assertion will be invalidated after
-        checking. Note that the specification believes this should always be
-        the case. Implementations may refuse to accept requests to keep the
-        assertion valid.
+        @param invalidate: If true, the assertion will be invalidated.
         @type invalidate: C{bool}
         """
