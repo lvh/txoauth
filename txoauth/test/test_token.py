@@ -13,11 +13,23 @@ class _TokenRequestTests(TestCase):
     def setUp(self):
         self.credentials = cred.ClientIdentifier(IDENTIFIER, URI)
         self.bogusCredentials = cred.ClientIdentifier(BOGUS_IDENTIFIER, URI)
+        self.tokenRequest = self.implementer(self.credentials,
+                                             *self.args, **self.kwargs)
 
 
     def test_interface(self):
         self.assertTrue(token.ITokenRequest.implementedBy(self.implementer))
         self.assertTrue(self.interface.implementedBy(self.implementer))
+
+
+    def test_keepCredentials(self):
+        actual = self.tokenRequest.clientCredentials
+        self.assertEqual(actual, self.credentials)
+
+
+    def test_notCredentials(self):
+        self.assertRaises(TypeError,
+                          self.implementer, None, *self.args, **self.kwargs)
 
 
     def test_clientCredentialsImmutability_same(self):
@@ -35,7 +47,7 @@ class _TokenRequestTests(TestCase):
 
 class BaseTokenRequestTestCase(_TokenRequestTests):
     interface, implementer = token.ITokenRequest, token._BaseTokenRequest
-
+    args, kwargs = (), {}
 
 TYPE, ASSERTION = "", ""
 BOGUS_TYPE, BOGUS_ASSERTION = "", ""
@@ -43,20 +55,11 @@ BOGUS_TYPE, BOGUS_ASSERTION = "", ""
 
 class AssertionTests(_TokenRequestTests):
     interface, implementer = token.IAssertion, token.Assertion
-
-    def setUp(self):
-        _TokenRequestTests.setUp(self)
-        self.assertion = token.Assertion(self.credentials, TYPE, ASSERTION)
-
-
-    def test_interface(self):
-        self.assertTrue(token.IAssertion.implementedBy(token.Assertion))
-
+    args, kwargs = (TYPE, ASSERTION), {}
 
     def test_simple(self):
-        self.assertEqual(self.assertion.clientCredentials, self.credentials)
-        self.assertEqual(self.assertion.assertionType, TYPE)
-        self.assertEqual(self.assertion.assertion, ASSERTION)
+        self.assertEqual(self.tokenRequest.assertionType, TYPE)
+        self.assertEqual(self.tokenRequest.assertion, ASSERTION)
 
 
     def test_assertionTypeImmutability_same(self):
