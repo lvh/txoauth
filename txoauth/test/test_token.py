@@ -14,8 +14,21 @@ class _TokenRequestTests(TestCase):
     def setUp(self):
         self.credentials = cred.ClientIdentifier(IDENTIFIER, URI)
         self.bogusCredentials = cred.ClientIdentifier(BOGUS_IDENTIFIER, URI)
-        self.tokenRequest = self.implementer(self.credentials,
-                                             *self.args, **self.kwargs)
+        self.tokenRequest = self._buildTokenRequest()
+
+
+    def _buildTokenRequest(self):
+        return self.implementer(self.credentials, *self.args, **self.kwargs)
+
+
+    def test_equality(self):
+        otherRequest = self._buildTokenRequest()
+        self.assertEqual(self.tokenRequest, otherRequest)
+
+
+    def test_hash(self):
+        otherRequest = self._buildTokenRequest()
+        self.assertEqual(hash(otherRequest), hash(otherRequest))
 
 
     def test_interface(self):
