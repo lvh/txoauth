@@ -9,6 +9,7 @@ from twisted.trial.unittest import TestCase
 
 class _TokenRequestTests(TestCase):
     interface, implementer = None, None
+    args, kwargs = (), {}
 
     def setUp(self):
         self.credentials = cred.ClientIdentifier(IDENTIFIER, URI)
