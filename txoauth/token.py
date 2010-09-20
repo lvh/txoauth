@@ -1,6 +1,8 @@
 """
 OAuth token endpoint support.
 """
+from txoauth.clientcred import IClientIdentifier
+
 from zope.interface import Attribute, Interface, implements
 
 
@@ -38,7 +40,7 @@ class _BaseTokenRequest(object):
     implements(ITokenRequest)
 
     def __init__(self, clientCredentials):
-        self._clientCredentials = clientCredentials
+        self._clientCredentials = IClientIdentifier(clientCredentials)
 
 
     @property
