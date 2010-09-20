@@ -5,11 +5,11 @@ from zope.interface import Attribute, Interface, implements
 
 
 class ITokenRequest(Interface):
-    client = Attribute(
+    clientCredentials = Attribute(
         """
-        The authenticated client making the request.
+        The client credentials used in the request.
 
-        @type: L{txoauth.clientcred.IClient}
+        @type: L{txoauth.clientcred.IClientIdentifier}
         """)
 
 
