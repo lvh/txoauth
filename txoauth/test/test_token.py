@@ -65,24 +65,16 @@ class AssertionTests(_TokenRequestTests):
 
 
     def test_assertionTypeImmutability_same(self):
-        def mutateAssertionType():
-            self.assertion.assertionType = TYPE
-        self.assertRaises(AttributeError, mutateAssertionType)
+        self._test_immutability("assertionType", TYPE)
 
 
     def test_assertionTypeImmutability_different(self):
-        def mutateAssertionType():
-            self.assertion.assertionType = BOGUS_TYPE
-        self.assertRaises(AttributeError, mutateAssertionType)
+        self._test_immutability("assertionType", BOGUS_TYPE)
 
 
     def test_assertionImmutability_same(self):
-        def mutateAssertion():
-            self.assertion.assertion = ASSERTION
-        self.assertRaises(AttributeError, mutateAssertion)
+        self._test_immutability("assertion", ASSERTION)
 
 
     def test_assertionImmutability_different(self):
-        def mutateAssertion():
-            self.assertion.assertion = BOGUS_ASSERTION
-        self.assertRaises(AttributeError, mutateAssertion)
+        self._test_immutability("assertion", BOGUS_ASSERTION)
