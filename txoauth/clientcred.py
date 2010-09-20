@@ -1,16 +1,15 @@
 """
 Cred stuff for authenticating OAuth clients.
 """
-from txoauth.interfaces import (IClient,
-                                IClientIdentifier,
-                                IClientIdentifierSecret)
+from txoauth.interfaces import IClient
 
+from twisted.cred.credentials import ICredentials
 from twisted.cred.portal import IRealm
 from twisted.internet import defer
 from twisted.python.components import registerAdapter
 from twisted.web.iweb import IRequest
 
-from zope.interface import implements
+from zope.interface import implements, Attribute
 
 
 _UNSET = object()
@@ -85,6 +84,29 @@ class ClientRealm(object):
 
 
 
+class IClientIdentifier(ICredentials):
+    """
+    A client identifier.
+    """
+    identifier = Attribute(
+        """
+        The client identifier for a particular client.
+
+        @type: C{str}
+        """)
+
+
+    redirectURI = Attribute(
+        """
+        The redirect URI presented in a request.
+
+        If no redirect URI was present in the request, C{None}.
+
+        @type: C{str} or C{None}
+        """)
+
+
+
 class ClientIdentifier(object):
     implements(IClientIdentifier)
 
@@ -101,6 +123,19 @@ class ClientIdentifier(object):
     @property
     def redirectURI(self):
         return self._redirectURI
+
+
+
+class IClientIdentifierSecret(IClientIdentifier):
+    """
+    A client identifier plus a shared secret.
+    """
+    secret = Attribute(
+        """
+        The shared secret of this client.
+
+        @type: C{str}
+        """)
 
 
 

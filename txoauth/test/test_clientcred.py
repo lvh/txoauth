@@ -2,9 +2,8 @@
 Tests for txOAuth authentication servers.
 """
 from txoauth import clientcred
-from txoauth.interfaces import (IClient,
-                                IClientIdentifier,
-                                IClientIdentifierSecret)
+from txoauth.clientcred import IClientIdentifier, IClientIdentifierSecret
+from txoauth.interfaces import IClient
 from txoauth.contrib.simple import SimpleRedirectURIFactory
 
 from twisted.trial.unittest import TestCase
