@@ -2,6 +2,7 @@
 OAuth token endpoint support.
 """
 from txoauth.clientcred import IClientIdentifier
+from txoauth._twisted import FancyHashMixin
 
 from zope.interface import Attribute, Interface, implements
 
@@ -36,8 +37,9 @@ class IAssertion(ITokenRequest):
 
 
 
-class _BaseTokenRequest(object):
+class _BaseTokenRequest(object, FancyHashMixin):
     implements(ITokenRequest)
+    compareAttributes = hashAttributes = ("clientCredentials",)
 
     def __init__(self, clientCredentials):
         self._clientCredentials = IClientIdentifier(clientCredentials)
@@ -54,6 +56,9 @@ class Assertion(_BaseTokenRequest):
     A token request in the form of an assertion.
     """
     implements(IAssertion)
+    compareAttributes = hashAttributes = ("clientCredentials",
+                                          "assertion",
+                                          "assertionType")
 
     def __init__(self, clientCredentials, assertionType, assertion):
         super(Assertion, self).__init__(clientCredentials)
