@@ -1,15 +1,17 @@
 """
 OAuth token endpoint support.
 """
+from txoauth.clientcred import IClientIdentifier
+
 from zope.interface import Attribute, Interface, implements
 
 
 class ITokenRequest(Interface):
-    client = Attribute(
+    clientCredentials = Attribute(
         """
-        The authenticated client making the request.
+        The client credentials used in the request.
 
-        @type: L{txoauth.clientcred.IClient}
+        @type: L{txoauth.clientcred.IClientIdentifier}
         """)
 
 
@@ -34,21 +36,29 @@ class IAssertion(ITokenRequest):
 
 
 
-class Assertion(object):
+class _BaseTokenRequest(object):
+    implements(ITokenRequest)
+
+    def __init__(self, clientCredentials):
+        self._clientCredentials = IClientIdentifier(clientCredentials)
+
+
+    @property
+    def clientCredentials(self):
+        return self._clientCredentials
+
+
+
+class Assertion(_BaseTokenRequest):
     """
     A token request in the form of an assertion.
     """
     implements(IAssertion)
 
-    def __init__(self, client, assertionType, assertion):
-        self._client = client
+    def __init__(self, clientCredentials, assertionType, assertion):
+        super(Assertion, self).__init__(clientCredentials)
         self._assertionType = assertionType
         self._assertion = assertion
-
-
-    @property
-    def client(self):
-        return self._client
 
 
     @property

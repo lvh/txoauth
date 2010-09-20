@@ -6,58 +6,76 @@ from txoauth.test.test_clientcred import IDENTIFIER, BOGUS_IDENTIFIER, URI
 
 from twisted.trial.unittest import TestCase
 
+
+class _TokenRequestTests(TestCase):
+    interface, implementer = None, None
+    args, kwargs = (), {}
+
+    def setUp(self):
+        self.credentials = cred.ClientIdentifier(IDENTIFIER, URI)
+        self.bogusCredentials = cred.ClientIdentifier(BOGUS_IDENTIFIER, URI)
+        self.tokenRequest = self.implementer(self.credentials,
+                                             *self.args, **self.kwargs)
+
+
+    def test_interface(self):
+        self.assertTrue(token.ITokenRequest.implementedBy(self.implementer))
+        self.assertTrue(self.interface.implementedBy(self.implementer))
+
+
+    def test_keepCredentials(self):
+        actual = self.tokenRequest.clientCredentials
+        self.assertEqual(actual, self.credentials)
+
+
+    def test_notCredentials(self):
+        self.assertRaises(TypeError,
+                          self.implementer, None, *self.args, **self.kwargs)
+
+
+    def _test_immutability(self, name, value):
+        self.assertRaises(AttributeError,
+                          setattr, self.tokenRequest, name, value)
+
+
+    def test_clientCredentialsImmutability_same(self):
+        self._test_immutability("clientCredentials", self.credentials)
+
+
+    def test_clientCredentialsImmutability_different(self):
+        self._test_immutability("clientCredentials", self.bogusCredentials)
+
+
+
+class BaseTokenRequestTestCase(_TokenRequestTests):
+    interface, implementer = token.ITokenRequest, token._BaseTokenRequest
+    args, kwargs = (), {}
+
+
 TYPE, ASSERTION = "", ""
 BOGUS_TYPE, BOGUS_ASSERTION = "", ""
 
 
-class AssertionTests(TestCase):
-    def setUp(self):
-        self.credentials = cred.ClientIdentifier(IDENTIFIER, URI)
-        self.bogusCredentials = cred.ClientIdentifier(BOGUS_IDENTIFIER, URI)
-        self.assertion = token.Assertion(self.credentials, TYPE, ASSERTION)
-
-
-    def test_interface(self):
-        self.assertTrue(token.IAssertion.implementedBy(token.Assertion))
-
+class AssertionTests(_TokenRequestTests):
+    interface, implementer = token.IAssertion, token.Assertion
+    args, kwargs = (TYPE, ASSERTION), {}
 
     def test_simple(self):
-        self.assertEqual(self.assertion.client, self.credentials)
-        self.assertEqual(self.assertion.assertionType, TYPE)
-        self.assertEqual(self.assertion.assertion, ASSERTION)
-
-
-    def test_clientImmutability_same(self):
-        def mutateClient():
-            self.assertion.client = self.credentials
-        self.assertRaises(AttributeError, mutateClient)
-
-
-    def test_clientImmutability_different(self):
-        def mutateClient():
-            self.assertion.client = self.bogusCredentials
-        self.assertRaises(AttributeError, mutateClient)
+        self.assertEqual(self.tokenRequest.assertionType, TYPE)
+        self.assertEqual(self.tokenRequest.assertion, ASSERTION)
 
 
     def test_assertionTypeImmutability_same(self):
-        def mutateAssertionType():
-            self.assertion.assertionType = TYPE
-        self.assertRaises(AttributeError, mutateAssertionType)
+        self._test_immutability("assertionType", TYPE)
 
 
     def test_assertionTypeImmutability_different(self):
-        def mutateAssertionType():
-            self.assertion.assertionType = BOGUS_TYPE
-        self.assertRaises(AttributeError, mutateAssertionType)
+        self._test_immutability("assertionType", BOGUS_TYPE)
 
 
     def test_assertionImmutability_same(self):
-        def mutateAssertion():
-            self.assertion.assertion = ASSERTION
-        self.assertRaises(AttributeError, mutateAssertion)
+        self._test_immutability("assertion", ASSERTION)
 
 
     def test_assertionImmutability_different(self):
-        def mutateAssertion():
-            self.assertion.assertion = BOGUS_ASSERTION
-        self.assertRaises(AttributeError, mutateAssertion)
+        self._test_immutability("assertion", BOGUS_ASSERTION)
