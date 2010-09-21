@@ -157,4 +157,4 @@ class EndUserCredentialTests(_TokenRequestTests):
                           self.implementer,
                           clientCredentials=self.credentials,
                           endUserCredentials=None,
-                          *self.args, **self.kwargs)
+                          *self.args[1:], **self.kwargs)
