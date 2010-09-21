@@ -4,6 +4,8 @@ OAuth token endpoint support.
 from txoauth.clientcred import IClientIdentifier
 from txoauth._twisted import FancyHashMixin
 
+from twisted.cred.credentials import IUsernamePassword
+
 from zope.interface import Attribute, Interface, implements
 
 
@@ -155,7 +157,7 @@ class EndUserCredentials(_BaseTokenRequest):
 
     def __init__(self, clientCredentials, endUserCredentials):
         super(EndUserCredentials, self).__init__(clientCredentials)
-        self._endUserCredentials = endUserCredentials
+        self._endUserCredentials = IUsernamePassword(endUserCredentials)
 
 
     @property
