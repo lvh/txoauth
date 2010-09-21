@@ -1,4 +1,4 @@
-"""
+3"""
 Tests for token endpoints.
 """
 from txoauth import token, clientcred as cred
@@ -92,3 +92,22 @@ class AssertionTests(_TokenRequestTests):
 
     def test_assertionImmutability_different(self):
         self._test_immutability("assertion", BOGUS_ASSERTION)
+
+
+CODE, BOGUS_CODE = "twisted", "threading"
+
+
+class AuthorizationCodeTests(_TokenRequestTests):
+    interface, implementer = token.IAuthorizationCode, token.AuthorizationCode
+    args, kwargs = (CODE,), {}
+
+    def test_simple(self):
+        self.assertEqual(self.tokenRequest.authorizationCode, CODE)
+
+
+    def test_authorizationCodeImmutability_same(self):
+        self._test_immutability("authorizationCode", CODE)
+
+
+    def test_authorizationCodeImmutability_different(self):
+        self._test_immutability("authorizationCode", BOGUS_CODE)
