@@ -4,6 +4,7 @@ Tests for token endpoints.
 from txoauth import token, clientcred as cred
 from txoauth.test.test_clientcred import IDENTIFIER, BOGUS_IDENTIFIER, URI
 
+from twisted.cred.credentials import UsernamePassword
 from twisted.trial.unittest import TestCase
 
 
@@ -131,8 +132,8 @@ class RefreshTokenTests(_TokenRequestTests):
         self._test_immutability("refreshToken", BOGUS_REFRESH_TOKEN)
 
 
-CREDENTIALS = cred.ClientIdentifier(IDENTIFIER)
-BOGUS_CREDENTIALS = cred.ClientIdentifier(BOGUS_IDENTIFIER)
+CREDENTIALS = UsernamePassword("lvh", "xyzzy")
+BOGUS_CREDENTIALS = UsernamePassword("skynet", "swordfish")
 
 
 class EndUserCredentialTests(_TokenRequestTests):
