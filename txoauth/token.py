@@ -37,6 +37,19 @@ class IAssertion(ITokenRequest):
 
 
 
+class IAuthorizationCode(ITokenRequest):
+    """
+    A token request in the form of an authorization code.
+    """
+    authorizationCode = Attribute(
+        """
+        The authorization code used to make the request.
+
+        @type: C{str}
+        """)
+
+
+
 class _BaseTokenRequest(object, FancyHashMixin):
     implements(ITokenRequest)
     compareAttributes = hashAttributes = ("clientCredentials",)
