@@ -150,3 +150,10 @@ class EndUserCredentialTests(_TokenRequestTests):
 
     def test_endUserCredentialsImmutability_differnt(self):
         self._test_immutability("endUserCredentials", BOGUS_CREDENTIALS)
+
+
+    def test_endUserCredentials_notCredentials(self):
+        self.assertRaises(AttributeError,
+                          implementer, self.credentials,
+                          endUserCredentials=None,
+                          *self.args, **self.kwargs)
