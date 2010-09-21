@@ -153,7 +153,7 @@ class EndUserCredentialTests(_TokenRequestTests):
 
 
     def test_endUserCredentials_notCredentials(self):
-        self.assertRaises(AttributeError,
+        self.assertRaises(TypeError,
                           self.implementer,
                           clientCredentials=self.credentials,
                           endUserCredentials=None,
