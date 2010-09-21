@@ -62,16 +62,15 @@ class _TokenRequestTests(TestCase):
 
 class BaseTokenRequestTestCase(_TokenRequestTests):
     interface, implementer = token.ITokenRequest, token._BaseTokenRequest
-    args, kwargs = (), {}
 
 
-TYPE, ASSERTION = "", ""
-BOGUS_TYPE, BOGUS_ASSERTION = "", ""
+TYPE, ASSERTION = "IReactorFDSet", "awesome"
+BOGUS_TYPE, BOGUS_ASSERTION = "Thread", "not blowing up"
 
 
 class AssertionTests(_TokenRequestTests):
     interface, implementer = token.IAssertion, token.Assertion
-    args, kwargs = (TYPE, ASSERTION), {}
+    args = TYPE, ASSERTION
 
     def test_simple(self):
         self.assertEqual(self.tokenRequest.assertionType, TYPE)
@@ -92,3 +91,22 @@ class AssertionTests(_TokenRequestTests):
 
     def test_assertionImmutability_different(self):
         self._test_immutability("assertion", BOGUS_ASSERTION)
+
+
+CODE, BOGUS_CODE = "twisted", "threading"
+
+
+class AuthorizationCodeTests(_TokenRequestTests):
+    interface, implementer = token.IAuthorizationCode, token.AuthorizationCode
+    args = CODE,
+
+    def test_simple(self):
+        self.assertEqual(self.tokenRequest.authorizationCode, CODE)
+
+
+    def test_authorizationCodeImmutability_same(self):
+        self._test_immutability("authorizationCode", CODE)
+
+
+    def test_authorizationCodeImmutability_different(self):
+        self._test_immutability("authorizationCode", BOGUS_CODE)

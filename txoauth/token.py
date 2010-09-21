@@ -37,6 +37,19 @@ class IAssertion(ITokenRequest):
 
 
 
+class IAuthorizationCode(ITokenRequest):
+    """
+    A token request in the form of an authorization code.
+    """
+    authorizationCode = Attribute(
+        """
+        The authorization code used to make the request.
+
+        @type: C{str}
+        """)
+
+
+
 class _BaseTokenRequest(object, FancyHashMixin):
     implements(ITokenRequest)
     compareAttributes = hashAttributes = ("clientCredentials",)
@@ -74,6 +87,21 @@ class Assertion(_BaseTokenRequest):
     @property
     def assertion(self):
        return self._assertion
+
+
+
+class AuthorizationCode(_BaseTokenRequest):
+    implements(IAuthorizationCode)
+    compareAttributes = hashAttributes = ("clientCredentials",
+                                          "authorizationCode")
+
+    def __init__(self, clientCredentials, authorizationCode):
+        super(AuthorizationCode, self).__init__(clientCredentials)
+        self._authorizationCode = authorizationCode
+
+    @property
+    def authorizationCode(self):
+        return self._authorizationCode
 
 
 
