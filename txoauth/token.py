@@ -63,6 +63,17 @@ class IRefreshToken(ITokenRequest):
 
 
 
+class IEndUserCredentials(ITokenRequest):
+    """
+    A token request in the form of a pair of end-user credentials.
+    """
+    endUserCredentials = Attribute(
+        """
+        The end-user credentials.
+        """)
+
+
+
 class _BaseTokenRequest(object, FancyHashMixin):
     implements(ITokenRequest)
     compareAttributes = hashAttributes = ("clientCredentials",)
