@@ -90,6 +90,21 @@ class Assertion(_BaseTokenRequest):
 
 
 
+class AuthorizationCode(_BaseTokenRequest):
+    implements(IAuthorizationCode)
+    compareAttributes = hashAttributes = ("clientCredentials",
+                                          "authorizationCode")
+
+    def __init__(self, clientCredentials, authorizationCode):
+        super(AuthorizationCode, self).__init__(clientCredentials)
+        self._authorizationCode = authorizationCode
+
+    @property
+    def authorizationCode(self):
+        return self._authorizationCode
+
+
+
 class EnforcedInvalidationException(Exception):
     """
     Raised when attempting to check an assertion while not invalidating the
