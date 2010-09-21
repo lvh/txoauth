@@ -50,6 +50,19 @@ class IAuthorizationCode(ITokenRequest):
 
 
 
+class IRefreshToken(ITokenRequest):
+    """
+    A token request in the form of a refresh token.
+    """
+    refreshToken = Attribute(
+        """
+        The refresh token.
+
+        @type: C{str}
+        """)
+
+
+
 class _BaseTokenRequest(object, FancyHashMixin):
     implements(ITokenRequest)
     compareAttributes = hashAttributes = ("clientCredentials",)
@@ -99,9 +112,26 @@ class AuthorizationCode(_BaseTokenRequest):
         super(AuthorizationCode, self).__init__(clientCredentials)
         self._authorizationCode = authorizationCode
 
+
     @property
     def authorizationCode(self):
         return self._authorizationCode
+
+
+
+class RefreshToken(_BaseTokenRequest):
+    implements(IRefreshToken)
+    compareAttributes = hashAttributes = ("clientCredentials",
+                                          "refreshToken")
+
+    def __init__(self, clientCredentials, refreshToken):
+        super(RefreshToken, self).__init__(clientCredentials)
+        self._refreshToken = refreshToken
+
+
+    @property
+    def refreshToken(self):
+        return self._refreshToken
 
 
 
