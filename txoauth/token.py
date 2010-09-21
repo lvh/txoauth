@@ -70,6 +70,8 @@ class IEndUserCredentials(ITokenRequest):
     endUserCredentials = Attribute(
         """
         The end-user credentials.
+
+        @type: L{twisted.cred.credentials.IUsernamePassword}
         """)
 
 
@@ -143,6 +145,22 @@ class RefreshToken(_BaseTokenRequest):
     @property
     def refreshToken(self):
         return self._refreshToken
+
+
+
+class EndUserCredentials(_BaseTokenRequest):
+    implements(IEndUserCredentials)
+    compareAttributes = hashAttributes = ("clientCredentials",
+                                          "endUserCredentials")
+
+    def __init__(self, clientCredentials, endUserCredentials):
+        super(RefreshToken, self).__init__(clientCredentials)
+        self._endUserCredentials = endUserCredentials
+
+
+    @property
+    def endUserCredentials(self):
+        return self._endUserCredentials
 
 
 
