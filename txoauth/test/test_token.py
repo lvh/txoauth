@@ -128,4 +128,25 @@ class RefreshTokenTests(_TokenRequestTests):
 
 
     def test_refreshTokenImmutability_different(self):
-        self._test_immutability("refreshToken", BOGUS_REFRESH_TOKEN)        
+        self._test_immutability("refreshToken", BOGUS_REFRESH_TOKEN)
+
+
+CREDENTIALS = cred.ClientIdentifier(IDENTIFIER)
+BOGUS_CREDENTIALS = cred.ClientIdentifier(BOGUS_IDENTIFIER)
+
+
+class EndUserCredentialTests(_TokenRequestTests):
+    interface = token.IEndUserCredentials
+    implementer = token.EndUserCredentials
+    args = CREDENTIALS,
+
+    def test_simple(self):
+        self.assertEqual(self.tokenRequest.endUserCredentials, CREDENTIALS)
+
+
+    def test_endUserCredentialsImmutability_same(self):
+        self._test_immutability("endUserCredentials", CREDENTIALS)
+
+
+    def test_endUserCredentialsImmutability_differnt(self):
+        self._test_immutability("endUserCredentials", BOGUS_CREDENTIALS)
