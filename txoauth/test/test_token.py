@@ -117,7 +117,7 @@ REFRESH_TOKEN, BOGUS_REFRESH_TOKEN = "deodorant", "skunk"
 
 class RefreshTokenTests(_TokenRequestTests):
     interface, implementer = token.IRefreshToken, token.RefreshToken
-    args = REFRESH_TOKEN
+    args = REFRESH_TOKEN,
 
     def test_simple(self):
         self.assertEqual(self.tokenRequest.refreshToken, REFRESH_TOKEN)
