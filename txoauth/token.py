@@ -154,7 +154,7 @@ class EndUserCredentials(_BaseTokenRequest):
                                           "endUserCredentials")
 
     def __init__(self, clientCredentials, endUserCredentials):
-        super(RefreshToken, self).__init__(clientCredentials)
+        super(EndUserCredentials, self).__init__(clientCredentials)
         self._endUserCredentials = endUserCredentials
 
 
