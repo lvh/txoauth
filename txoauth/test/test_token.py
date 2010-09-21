@@ -65,8 +65,8 @@ class BaseTokenRequestTestCase(_TokenRequestTests):
     args, kwargs = (), {}
 
 
-TYPE, ASSERTION = "", ""
-BOGUS_TYPE, BOGUS_ASSERTION = "", ""
+TYPE, ASSERTION = "IReactorFDSet", "awesome"
+BOGUS_TYPE, BOGUS_ASSERTION = "Thread", "not blowing up"
 
 
 class AssertionTests(_TokenRequestTests):
