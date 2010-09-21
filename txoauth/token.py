@@ -50,6 +50,19 @@ class IAuthorizationCode(ITokenRequest):
 
 
 
+class IRefreshToken(ITokenRequest):
+    """
+    A token request in the form of a refresh token.
+    """
+    refreshToken = Attribute(
+        """
+        The refresh token.
+
+        @type: C{str}
+        """)
+
+
+
 class _BaseTokenRequest(object, FancyHashMixin):
     implements(ITokenRequest)
     compareAttributes = hashAttributes = ("clientCredentials",)
