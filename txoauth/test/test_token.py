@@ -110,3 +110,22 @@ class AuthorizationCodeTests(_TokenRequestTests):
 
     def test_authorizationCodeImmutability_different(self):
         self._test_immutability("authorizationCode", BOGUS_CODE)
+
+
+REFRESH_TOKEN, BOGUS_REFRESH_TOKEN = "deodorant", "skunk"
+
+
+class RefreshTokenTests(_TokenRequestTests):
+    interface, implementer = token.IRefreshToken, token.RefreshToken
+    args = REFRESH_TOKEN
+
+    def test_simple(self):
+        self.assertEqual(self.tokenRequest.refreshToken, REFRESH_TOKEN)
+
+
+    def test_refreshTokenImmutability_same(self):
+        self._test_immutability("refreshToken", REFRESH_TOKEN)
+
+
+    def test_refreshTokenImmutability_different(self):
+        self._test_immutability("refreshToken", BOGUS_REFRESH_TOKEN)        
