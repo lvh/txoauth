@@ -4,6 +4,7 @@ Tests for token endpoints.
 from txoauth import token, clientcred as cred
 from txoauth.test.test_clientcred import IDENTIFIER, BOGUS_IDENTIFIER, URI
 
+from twisted.cred.credentials import UsernamePassword
 from twisted.trial.unittest import TestCase
 
 
@@ -128,4 +129,33 @@ class RefreshTokenTests(_TokenRequestTests):
 
 
     def test_refreshTokenImmutability_different(self):
-        self._test_immutability("refreshToken", BOGUS_REFRESH_TOKEN)        
+        self._test_immutability("refreshToken", BOGUS_REFRESH_TOKEN)
+
+
+CREDENTIALS = UsernamePassword("lvh", "xyzzy")
+BOGUS_CREDENTIALS = UsernamePassword("skynet", "swordfish")
+
+
+class EndUserCredentialTests(_TokenRequestTests):
+    interface = token.IEndUserCredentials
+    implementer = token.EndUserCredentials
+    args = CREDENTIALS,
+
+    def test_simple(self):
+        self.assertEqual(self.tokenRequest.endUserCredentials, CREDENTIALS)
+
+
+    def test_endUserCredentialsImmutability_same(self):
+        self._test_immutability("endUserCredentials", CREDENTIALS)
+
+
+    def test_endUserCredentialsImmutability_differnt(self):
+        self._test_immutability("endUserCredentials", BOGUS_CREDENTIALS)
+
+
+    def test_endUserCredentials_notCredentials(self):
+        self.assertRaises(TypeError,
+                          self.implementer,
+                          clientCredentials=self.credentials,
+                          endUserCredentials=None,
+                          *self.args[1:], **self.kwargs)

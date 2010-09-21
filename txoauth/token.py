@@ -4,6 +4,8 @@ OAuth token endpoint support.
 from txoauth.clientcred import IClientIdentifier
 from txoauth._twisted import FancyHashMixin
 
+from twisted.cred.credentials import IUsernamePassword
+
 from zope.interface import Attribute, Interface, implements
 
 
@@ -59,6 +61,19 @@ class IRefreshToken(ITokenRequest):
         The refresh token.
 
         @type: C{str}
+        """)
+
+
+
+class IEndUserCredentials(ITokenRequest):
+    """
+    A token request in the form of a pair of end-user credentials.
+    """
+    endUserCredentials = Attribute(
+        """
+        The end-user credentials.
+
+        @type: L{twisted.cred.credentials.IUsernamePassword}
         """)
 
 
@@ -132,6 +147,22 @@ class RefreshToken(_BaseTokenRequest):
     @property
     def refreshToken(self):
         return self._refreshToken
+
+
+
+class EndUserCredentials(_BaseTokenRequest):
+    implements(IEndUserCredentials)
+    compareAttributes = hashAttributes = ("clientCredentials",
+                                          "endUserCredentials")
+
+    def __init__(self, clientCredentials, endUserCredentials):
+        super(EndUserCredentials, self).__init__(clientCredentials)
+        self._endUserCredentials = IUsernamePassword(endUserCredentials)
+
+
+    @property
+    def endUserCredentials(self):
+        return self._endUserCredentials
 
 
 
