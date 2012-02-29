@@ -1,0 +1,42 @@
+body {
+  font-family: "PT Serif";
+  font-size: 20px;
+}
+code {
+  font-family: monospace;
+}
+h1,
+p:first-child {
+  text-align: center;
+}
+h1,
+p,
+pre > code,
+section#body > img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+section#body > h1 {
+  margin-top: 48px;
+}
+p,
+li,
+code {
+  width: 640px;
+}
+p,
+li {
+  text-align: justify;
+  line-height: 140%;
+}
+a,
+a:visited {
+  color: red;
+}
+img#ribbon {
+  position: fixed;
+  top: 0;
+  right: 0;
+  border: 0;
+}
