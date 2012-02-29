@@ -1,3 +1,3 @@
 """
-Integration tests for txOAuth.
+Integration tests for txoauth.
 """

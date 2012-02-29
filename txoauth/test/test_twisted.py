@@ -1,5 +1,5 @@
 """
-Tests for txOAuth contributions to Twisted.
+Tests for txoauth contributions to Twisted.
 """
 from txoauth._twisted import FancyHashMixin
 

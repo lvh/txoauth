@@ -1,5 +1,5 @@
 """
-Simple implementations of some txOAuth interfaces.
+Simple implementations of some txoauth interfaces.
 """
 from txoauth.token import EnforcedInvalidationException, AssertionNotFound
 from txoauth.interfaces import IRedirectURIFactory, IAssertionStore

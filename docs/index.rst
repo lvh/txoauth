@@ -1,9 +1,9 @@
-.. txOAuth documentation master file, created by
+.. txoauth documentation master file, created by
    sphinx-quickstart on Mon Sep  6 15:06:07 2010.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to txOAuth's documentation!
+Welcome to txoauth's documentation!
 ===================================
 
 Contents:

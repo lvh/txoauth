@@ -1,5 +1,5 @@
 """
-Tests for simple txOAuth implementations.
+Tests for simple txoauth implementations.
 """
 from txoauth import interfaces, token, clientcred
 from txoauth.contrib import simple

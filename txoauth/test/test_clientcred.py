@@ -1,5 +1,5 @@
 """
-Tests for txOAuth authentication servers.
+Tests for txoauth authentication servers.
 """
 from txoauth import clientcred
 from txoauth.clientcred import IClientIdentifier, IClientIdentifierSecret

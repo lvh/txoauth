@@ -1,5 +1,5 @@
 """
-txOAuth stuff suggested for contribution back to Twisted.
+txoauth stuff suggested for contribution back to Twisted.
 """
 from twisted.python.util import FancyEqMixin
 

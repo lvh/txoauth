@@ -1,4 +1,4 @@
-txOAuth
+txoauth
 =======
 
-txOAuth provides OAuth 2.0 support for Twisted.
+txoauth provides OAuth 2.0 support for Twisted.

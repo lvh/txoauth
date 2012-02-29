@@ -1,15 +1,15 @@
 Getting Started
 ===============
 
-txOAuth is a package for writing OAuth 2.0 enabled applications in Python
+txoauth is a package for writing OAuth 2.0 enabled applications in Python
 using Twisted.
 
 Prerequisites
 -------------
 
-txOAuth requires a recent version of Twisted to run.
+txoauth requires a recent version of Twisted to run.
 
-txOAuth uses Twisted Cred and adapters extensively, and you probably won't
+txoauth uses Twisted Cred and adapters extensively, and you probably won't
 understand much without understanding those two concepts. You should probably
 start by reading the `Twisted Cred howto`_ and the `components introduction`_
 if you're not yet familiar with those concepts.
@@ -17,7 +17,7 @@ if you're not yet familiar with those concepts.
 .. _Twisted Cred howto: http://twistedmatrix.com/documents/current/core/howto/cred.html
 .. _components introduction: http://twistedmatrix.com/documents/current/core/howto/components.html
 
-txOAuth follows the latest revision of the `OAuth 2.0 specification`_, which
+txoauth follows the latest revision of the `OAuth 2.0 specification`_, which
 is currently still in draft, as much as possible. Any discrepancy should
 probably be reported as a bug.
 
@@ -26,8 +26,8 @@ probably be reported as a bug.
 Getting involved
 ----------------
 
-txOAuth uses Launchpad for code hosting, and tracking bugs and
+txoauth uses Launchpad for code hosting, and tracking bugs and
 specifications. If you would like to get involved (that includes reporting
-bugs!), check out the `txOAuth Launchpad page`_.
+bugs!), check out the `txoauth Launchpad page`_.
 
-.. _txOAuth Launchpad page: https://launchpad.net/txoauth
+.. _txoauth Launchpad page: https://launchpad.net/txoauth

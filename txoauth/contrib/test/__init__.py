@@ -1,3 +1,3 @@
 """
-Tests for contributed txOAuth code.
+Tests for contributed txoauth code.
 """
